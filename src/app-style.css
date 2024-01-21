@@ -1,0 +1,38 @@
+:root {
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+    --color-1: #030022;
+    --color-2: #ff5e00;
+    --color-3: #ffffff;
+
+    --color-bg-disabled: #696969;
+    --color-fg-disabled: #c4c4c4;
+
+    --color-danger-1: #c02525;
+    --color-bg-danger-1: #c02525;
+    --color-fg-danger-1: #ffffff;
+
+    --color-danger-2: #be0000;
+    --color-bg-danger-2: #be0000;
+    --color-fg-danger-2: #ffffff;
+
+    --color-bg-1: var( --color-1 );
+    --color-fg-1: var( --color-2 );
+
+    --color-bg-2: var( --color-1 );
+    --color-fg-2: var( --color-3 );
+
+    --color-bg-3: var( --color-2 );
+    --color-fg-3: var( --color-1 );
+
+    --color-bg-4: var( --color-2 );
+    --color-fg-4: var( --color-3 );
+
+    --color-bg-5: var( --color-3 );
+    --color-fg-5: var( --color-1 );
+
+}
+
+body {
+    font-family: "Roboto", sans-serif;
+}

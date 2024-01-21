@@ -32,13 +32,13 @@ export function LoginForm(props: LoginFormProps)
 
     return (
         <Wrapper onSubmit={submitHandler}>
-            <input type="text" name="email" placeholder="user email" />
+            <Input type="text" name="email" placeholder="user email" />
 
-            <input type="password" name="password" placeholder="Password" />
+            <Input type="password" name="password" placeholder="Password" />
 
             {errorMessage ? <ErrorLabel>{errorMessage}</ErrorLabel> : ''}
 
-            <button type="submit">Login</button>
+            <Button type="submit">Login</Button>
         </Wrapper>
     );
 }
@@ -46,8 +46,28 @@ export function LoginForm(props: LoginFormProps)
 const Wrapper = styled.form`
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 `;
 
 const ErrorLabel = styled.label`
-    color: red;
+    color: var(--color-danger-2);
+    font-weight: bold;
+`;
+
+const Input = styled.input`
+    border-radius: 5px;
+    border: 1px solid var(--color-fg-5);
+    background-color: var(--color-bg-5);
+    color: var(--color-fg-5);
+    height: 2rem;
+    padding: 0.5rem;
+`;
+
+const Button = styled.button`
+    border-radius: 5px;
+    border: none;
+    background-color: var(--color-bg-2);
+    color: var(--color-fg-2);
+    padding: 0.5rem;
+    font-weight: bold;
 `;
