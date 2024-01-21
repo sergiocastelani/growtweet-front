@@ -1,19 +1,18 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
 
 export class ApiConnection 
 {
-    private static BASE_URL = import.meta.env.VITE_API_BASE_URL;
-    private static AUTH_COOKIE_NAME = 'authorization';
+    public static BASE_URL = import.meta.env.VITE_API_BASE_URL;
+    public static AUTH_TOKEN_NAME = 'authorization';
 
     private axiosInstance : AxiosInstance;
 
     constructor() 
     {
-        const authToken = Cookies.get(ApiConnection.AUTH_COOKIE_NAME);
+        const authToken = localStorage.getItem(ApiConnection.AUTH_TOKEN_NAME);
 
         const headers : any = {};
-        headers[ApiConnection.AUTH_COOKIE_NAME] = authToken;
+        headers[ApiConnection.AUTH_TOKEN_NAME] = authToken;
 
         this.axiosInstance = axios.create({
             baseURL: ApiConnection.BASE_URL,
@@ -51,7 +50,10 @@ function unauthorizedErrorHandler(error: any)
     if (axios.isAxiosError(error))
     {
         if (error.response?.status === 401)
+        {
+            localStorage.removeItem(ApiConnection.AUTH_TOKEN_NAME);
             window.location.href = "/login";
+        }
     }
 
     return Promise.reject(error);

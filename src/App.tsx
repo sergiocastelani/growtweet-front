@@ -1,6 +1,6 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import { FeedPage } from "./pages/feed-page";
-import { LoginPage } from "./pages/login-page";
+import { LoginPage } from "./pages/login/login-page";
 
 const router = createBrowserRouter([
   {
