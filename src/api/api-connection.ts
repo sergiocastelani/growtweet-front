@@ -20,25 +20,25 @@ export class ApiConnection
         });
     }
 
-    get(url: string) : Promise<AxiosResponse<any, any>> 
+    async get(url: string)
     {
         return this.axiosInstance.get(url)
             .catch(unauthorizedErrorHandler);
     }
 
-    post(url: string, data?: any) : Promise<AxiosResponse<any, any>> 
+    async post(url: string, data?: any)
     {
         return this.axiosInstance.post(url, data)
             .catch(unauthorizedErrorHandler);
     }
 
-    put(url: string, data?: any) : Promise<AxiosResponse<any, any>> 
+    async put(url: string, data?: any)
     {
         return this.axiosInstance.put(url, data)
             .catch(unauthorizedErrorHandler);
     }
 
-    delete(url: string) : Promise<AxiosResponse<any, any>> 
+    async delete(url: string)
     {
         return this.axiosInstance.delete(url)
             .catch(unauthorizedErrorHandler);

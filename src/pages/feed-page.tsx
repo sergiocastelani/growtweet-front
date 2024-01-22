@@ -1,14 +1,14 @@
 import { useEffect } from "react";
-import { ApiConnection } from "../api/api-connection"
+import { ApiAuth } from "../api/api-auth";
 
 export function FeedPage()
 {
     useEffect(() => {
-        new ApiConnection().get('/tweet/all');
+        new ApiAuth().get('/tweet/all');
     },[]);
 
     const logout = async () => {
-        await new ApiConnection().post('/auth/logout');
+        await new ApiAuth().logout();
         window.location.href = '/';
     }
 

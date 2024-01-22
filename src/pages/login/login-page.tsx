@@ -86,7 +86,3 @@ const RightPanel = styled.div`
     padding: 50px;
     border-radius: 0px 20px 20px 0;
 `;
-
-const Description = styled.p`
-    text-align: justify;
-`;
