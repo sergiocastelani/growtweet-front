@@ -9,4 +9,6 @@ export function TweetList()
 
 const Wrapper = styled.div`
     padding: 10px;
+    width: 50%;
+    max-width: 600px;
 `;

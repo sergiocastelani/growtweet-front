@@ -22,7 +22,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     gap: 1rem;
     width: 10rem;
-    padding: 1rem 1rem 0 0;
+    padding: 1rem 1rem 0 10px;
     border-right: 1px solid color-mix(in srgb, var(--color-3) 30%, transparent);
 `;
 
