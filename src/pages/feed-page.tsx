@@ -8,7 +8,12 @@ export function FeedPage()
     return (
         <Wrapper>
             <NavBar/>
-            <TweetList/>
+            <CentralWidget>
+                <Tittle>Home</Tittle>
+                <TweetList 
+                    tweets={[{id:1, userId:1, repliedId: null, picture: null, content: "Lorem impsum"}]}
+                />
+            </CentralWidget>
             <News/>
         </Wrapper>
     )
@@ -24,3 +29,16 @@ const Wrapper = styled.div`
     background-color: var(--color-bg-2);
     color: var(--color-fg-2);
 `;
+
+const CentralWidget = styled.div`
+    padding: 0;
+    width: 50%;
+    max-width: 600px;
+`;
+
+const Tittle = styled.header`
+    padding: 1rem;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+`

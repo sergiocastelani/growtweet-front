@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
-import { UserAuthInfoDTO } from "./dto/auth-dtos";
+import { UserAuthInfoDTO } from "./dto/auth-types";
 
 export class ApiAuth extends ApiConnection 
 {
@@ -12,12 +12,12 @@ export class ApiAuth extends ApiConnection
     async login(email: string, password: string) : Promise<AxiosResponse<UserAuthInfoDTO, any>>
     {
         return super.post('/auth/login', {email, password})
-            .then((response) => {
+            .then((response: AxiosResponse<UserAuthInfoDTO, any>) => {
                 const data = response.data?.data;
                 localStorage.setItem(ApiConnection.AUTH_TOKEN_NAME, data?.token);
-                localStorage.setItem('id', data?.id);
-                localStorage.setItem('name', data?.name);
-                localStorage.setItem('email', data?.email);
+                localStorage.setItem('id', data.id.toString());
+                localStorage.setItem('name', data.name);
+                localStorage.setItem('email', data.email);
                 return response;
             });
     }
