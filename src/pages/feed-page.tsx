@@ -1,21 +1,26 @@
-import { useEffect } from "react";
-import { ApiAuth } from "../api/api-auth";
+import { styled } from "styled-components";
+import { NavBar } from "../components/nav-bar";
+import { TweetList } from "../components/tweet-list";
+import { News } from "../components/news";
 
 export function FeedPage()
 {
-    useEffect(() => {
-        new ApiAuth().get('/tweet/all');
-    },[]);
-
-    const logout = async () => {
-        await new ApiAuth().logout();
-        window.location.href = '/';
-    }
-
     return (
-        <div>
-            <h1>Feed</h1>
-            <button onClick={logout}>Logout</button>
-        </div>
+        <Wrapper>
+            <NavBar/>
+            <TweetList/>
+            <News/>
+        </Wrapper>
     )
 }
+
+const Wrapper = styled.div`
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    background-color: var(--color-bg-2);
+    color: var(--color-fg-2);
+`;

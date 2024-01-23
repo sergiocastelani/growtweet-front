@@ -1,20 +1,20 @@
 :root {
     @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-    --color-1: #030022;
-    --color-2: #ff5e00;
-    --color-3: #ffffff;
+    --color-1: rgb(3, 0, 34);
+    --color-2: rgb(230, 110, 41);
+    --color-3: rgb(255, 255, 255);
 
-    --color-bg-disabled: #696969;
-    --color-fg-disabled: #c4c4c4;
+    --color-bg-disabled: rgb(105, 105, 105);
+    --color-fg-disabled: rgb(196, 196, 196);
 
-    --color-danger-1: #c02525;
-    --color-bg-danger-1: #c02525;
-    --color-fg-danger-1: #ffffff;
+    --color-danger-1: rgb(192, 37, 37);
+    --color-bg-danger-1: rgb(192, 37, 37);
+    --color-fg-danger-1: rgb(255, 255, 255);
 
-    --color-danger-2: #be0000;
-    --color-bg-danger-2: #be0000;
-    --color-fg-danger-2: #ffffff;
+    --color-danger-2: rgb(190, 0, 0);
+    --color-bg-danger-2: rgb(190, 0, 0);
+    --color-fg-danger-2: rgb(255, 255, 255);
 
     --color-bg-1: var( --color-1 );
     --color-fg-1: var( --color-2 );
