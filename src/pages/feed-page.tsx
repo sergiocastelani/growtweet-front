@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { NavBar } from "../components/nav-bar";
-import { TweetList } from "../components/tweet-list";
+import { TweetList } from "../components/tweet/tweet-list";
 import { News } from "../components/news";
 
 export function FeedPage()

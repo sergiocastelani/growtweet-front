@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import logo from "../assets/logo.svg";
 import { FaHashtag, FaHome, FaRegUser } from "react-icons/fa";
+import { useState } from "react";
+import { TweetNewForm } from "./tweet/tweet-new-form";
 
 export function NavBar()
 {
+    const [showNewTweetForm, setShowNewTweetForm] = useState(false);
+
     return (
         <Wrapper>
             <Logo src={logo}/>
@@ -12,7 +16,15 @@ export function NavBar()
                 <Item><FaHashtag /> Explore</Item>
                 <Item><FaRegUser/> Profile</Item>
             </ItemList>
-            <Button>Tweet</Button>
+            <CreateTweetButton onClick={() => setShowNewTweetForm(true)}>
+                + Tweet Now
+            </CreateTweetButton>
+
+            {showNewTweetForm &&
+                <TweetNewForm 
+                    onClose={() => setShowNewTweetForm(false)}
+                />
+            }
         </Wrapper>
     );
 }
@@ -44,17 +56,17 @@ const Item = styled.div`
     }
 `;
 
-const Button = styled.button`
+const CreateTweetButton = styled.button`
     width: 100%;
     font-weight: bold;
     font-size: 1rem;
     padding: 0.5rem;
     border-radius: 1rem;
     border: none;
-    background-color: var(--color-bg-3);
-    color: var(--color-fg-3);
+    background-color: var(--color-bg-4);
+    color: var(--color-fg-4);
 
     &:hover {
-        background-color: color-mix(in srgb, var(--color-bg-3) 80%, white);
+        background-color: color-mix(in srgb, var(--color-bg-4) 80%, white);
     }
 `;

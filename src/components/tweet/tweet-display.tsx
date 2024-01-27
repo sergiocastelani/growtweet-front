@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
-import { Tweet } from "../api/dto/tweet-types";
-import emptyAvatar from '../assets/empty_avatar.png'
+import { Tweet } from "../../api/dto/tweet-types";
+import emptyAvatar from '../../assets/empty_avatar.png'
 import { HiOutlineChatBubbleLeft } from "react-icons/hi2";
 import { IoMdHeartEmpty } from "react-icons/io";
 
