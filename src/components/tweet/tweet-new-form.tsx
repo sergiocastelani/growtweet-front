@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { Modal } from "../modal";
 import { styled } from "styled-components";
-import { ReactEventHandler } from "react";
 import { ApiTweet } from "../../api/api-tweet";
 import { isAxiosError } from "axios";
 
 export interface TweetNewFormProps
 {
-    onClose: () => void;
+    onCreated: () => void;
+    onCancel: () => void;
 }
 
 export function TweetNewForm(props: TweetNewFormProps)
@@ -19,7 +19,7 @@ export function TweetNewForm(props: TweetNewFormProps)
         try 
         {
             await (new ApiTweet()).create(formData.content);
-            props.onClose();
+            props.onCreated();
         } 
         catch (error: any) 
         {
@@ -41,7 +41,7 @@ export function TweetNewForm(props: TweetNewFormProps)
     const handleCancel = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
     {
         event.preventDefault();
-        props.onClose();
+        props.onCancel();
     }
     
     return (

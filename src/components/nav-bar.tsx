@@ -22,7 +22,8 @@ export function NavBar()
 
             {showNewTweetForm &&
                 <TweetNewForm 
-                    onClose={() => setShowNewTweetForm(false)}
+                    onCreated={() => window.location.reload()}
+                    onCancel={() => setShowNewTweetForm(false)}
                 />
             }
         </Wrapper>

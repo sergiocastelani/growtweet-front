@@ -1,4 +1,6 @@
+import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
+import { TweetsDTO } from "./dto/tweet-types";
 
 export class ApiTweet extends ApiConnection 
 {
@@ -7,13 +9,13 @@ export class ApiTweet extends ApiConnection
         super();
     }
 
-    async all()
+    async all() : Promise<AxiosResponse<TweetsDTO,any>>
     {
-        return await super.get('/tweet/all');
+        return super.get('/tweet/all');
     }
 
     async create(content: string)
     {
-        return await super.post('/tweet', {content});
+        return super.post('/tweet', {content});
     }
 }

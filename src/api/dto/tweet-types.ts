@@ -10,3 +10,4 @@ export interface Tweet
 }
 
 export type TweetDTO = CommonResponse<Tweet>;
+export type TweetsDTO = CommonResponse<Tweet[]>;

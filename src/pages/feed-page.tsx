@@ -2,17 +2,27 @@ import { styled } from "styled-components";
 import { NavBar } from "../components/nav-bar";
 import { TweetList } from "../components/tweet/tweet-list";
 import { News } from "../components/news";
+import { useEffect, useState } from "react";
+import { Tweet } from "../api/dto/tweet-types";
+import { ApiTweet } from "../api/api-tweet";
 
 export function FeedPage()
 {
+    const [tweets, setTweets] = useState<Tweet[]>([]);
+
+    useEffect(() => {
+        (new ApiTweet()).all()
+            .then((response) => {
+                setTweets(response.data.data);
+            });
+    }, []);
+
     return (
         <Wrapper>
             <NavBar/>
             <CentralWidget>
                 <Tittle>Home</Tittle>
-                <TweetList 
-                    tweets={[{id:1, userId:1, repliedId: null, picture: null, content: "Lorem impsum"}]}
-                />
+                <TweetList tweets={tweets}/>
             </CentralWidget>
             <News/>
         </Wrapper>
