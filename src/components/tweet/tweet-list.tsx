@@ -1,10 +1,10 @@
 import { styled } from "styled-components";
-import { Tweet } from "../../api/dto/tweet-dtos";
+import { TweetDisplayInfo } from "../../api/dto/tweet-dtos";
 import { TweetDisplay } from "./tweet-display";
 
 export interface TweetListProps 
 {
-    tweets: Tweet[];
+    tweets: TweetDisplayInfo[];
 };
 
 export function TweetList(props: TweetListProps)

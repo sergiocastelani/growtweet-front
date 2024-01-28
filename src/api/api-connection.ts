@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { UserAuthInfo } from "./dto/auth-dtos";
 
 export class ApiConnection 
@@ -25,9 +25,9 @@ export class ApiConnection
         });
     }
 
-    async get(url: string)
+    async get(url: string, config?: AxiosRequestConfig<any>)
     {
-        return this.axiosInstance.get(url)
+        return this.axiosInstance.get(url, config)
             .catch(unauthorizedErrorHandler);
     }
 

@@ -22,6 +22,7 @@ export interface TweetDisplayInfo
     totalReplies: number;
     totalLikes: number;
     user: UserDisplayInfo;
+    liked: boolean;
 }
 
 export type TweetDisplayInfoDTO = CommonResponse<TweetDisplayInfo>;

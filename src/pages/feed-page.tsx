@@ -3,12 +3,12 @@ import { NavBar } from "../components/nav-bar";
 import { TweetList } from "../components/tweet/tweet-list";
 import { News } from "../components/news";
 import { useEffect, useState } from "react";
-import { Tweet } from "../api/dto/tweet-dtos";
+import { TweetDisplayInfo } from "../api/dto/tweet-dtos";
 import { ApiTweet } from "../api/api-tweet";
 
 export function FeedPage()
 {
-    const [tweets, setTweets] = useState<Tweet[]>([]);
+    const [tweets, setTweets] = useState<TweetDisplayInfo[]>([]);
 
     useEffect(() => {
         (new ApiTweet()).all()

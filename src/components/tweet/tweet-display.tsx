@@ -2,7 +2,9 @@ import { styled } from "styled-components";
 import { TweetDisplayInfo } from "../../api/dto/tweet-dtos";
 import emptyAvatar from '../../assets/empty_avatar.png'
 import { HiOutlineChatBubbleLeft } from "react-icons/hi2";
-import { IoMdHeartEmpty } from "react-icons/io";
+import { IoIosHeart, IoMdHeartEmpty } from "react-icons/io";
+import { ApiTweet } from "../../api/api-tweet";
+import { useState } from "react";
 
 export interface TweetDisplayProps 
 {
@@ -33,6 +35,22 @@ function relativeTimeString(dateStr: string)
 export function TweetDisplay(props: TweetDisplayProps) 
 {
     const tweet = props.tweet;
+    const [liked, setLiked] = useState(tweet.liked);
+    const [totalLikes, setTotalLikes] = useState(tweet.totalLikes);
+
+    const likeHandler = async () =>
+    {
+        await (new ApiTweet()).like(tweet.id);
+        setLiked(true);
+        setTotalLikes(totalLikes + 1);
+    }
+
+    const unlikeHandler = async () =>
+    {
+        await (new ApiTweet()).unlike(tweet.id);
+        setLiked(false);
+        setTotalLikes(totalLikes - 1);
+    }
 
     return (
         <Wrapper>
@@ -48,8 +66,17 @@ export function TweetDisplay(props: TweetDisplayProps)
                 <Content>{tweet.content}</Content>
 
                 <footer>
-                    <Icon><HiOutlineChatBubbleLeft/> <span>0</span></Icon>
-                    <Icon><IoMdHeartEmpty/> <span>0</span></Icon>
+                    <Icon>
+                        <HiOutlineChatBubbleLeft/>
+                        <span>{tweet.totalReplies}</span>
+                    </Icon>
+                    <Icon>
+                        {liked ?
+                            <IoIosHeart className="lighted" onClick={unlikeHandler}/> :
+                            <IoMdHeartEmpty onClick={likeHandler}/>
+                        }
+                        <span>{totalLikes}</span>
+                    </Icon>
                 </footer>
             </Description>
         </Wrapper>
@@ -111,5 +138,9 @@ const Icon = styled.span`
     & > svg {
         font-size: 1.3rem;
         cursor: pointer;
+    }
+
+    & > .lighted {
+        color: var(--color-2);
     }
 `;
