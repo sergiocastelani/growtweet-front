@@ -1,12 +1,33 @@
 import { styled } from "styled-components";
-import { Tweet } from "../../api/dto/tweet-dtos";
+import { TweetDisplayInfo } from "../../api/dto/tweet-dtos";
 import emptyAvatar from '../../assets/empty_avatar.png'
 import { HiOutlineChatBubbleLeft } from "react-icons/hi2";
 import { IoMdHeartEmpty } from "react-icons/io";
 
 export interface TweetDisplayProps 
 {
-    tweet: Tweet;
+    tweet: TweetDisplayInfo;
+}
+
+function relativeTimeString(dateStr: string) 
+{
+    const now = new Date();
+    const d = new Date(dateStr);
+    const diff = now.getTime() - d.getTime();
+
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) 
+        return `${days}d`;
+    else if (hours > 0) 
+        return `${hours}h`;
+    else if (minutes > 0) 
+        return `${minutes}m`;
+    else 
+        return 'just now';
 }
 
 export function TweetDisplay(props: TweetDisplayProps) 
@@ -15,11 +36,13 @@ export function TweetDisplay(props: TweetDisplayProps)
 
     return (
         <Wrapper>
-            <Picture src={tweet.picture ?? emptyAvatar}/>
+            <Picture src={tweet.user.pictureUrl ?? emptyAvatar}/>
             <Description>
                 <header>
-                    <UserName>{tweet.id}</UserName>
-                    <UserTag>@{tweet.id}</UserTag> • <RelativeTime>3h</RelativeTime>
+                    <UserName>{tweet.user.name}</UserName>
+                    <UserTag>@{tweet.user.username}</UserTag> 
+                    • 
+                    <RelativeTime>{relativeTimeString(tweet.createdAt)}</RelativeTime>
                 </header>
 
                 <Content>{tweet.content}</Content>
@@ -66,13 +89,18 @@ const Content = styled.p`
 `;
 
 const UserName = styled.span`
-    font-weight: bold;
+    font-weight: bolder;
     margin-right: 1rem;
 `;
 
-const UserTag = styled.span``;
+const UserTag = styled.span`
+    color: color-mix(in srgb, var(--color-3) 50%, transparent);
+    margin-right: 0.5rem;
+`;
 
-const RelativeTime = styled.span``;
+const RelativeTime = styled.span`
+    margin-left: 0.5rem;
+`;
 
 const Icon = styled.span`
     display: flex;
