@@ -5,11 +5,14 @@ import { useEffect, useState } from "react";
 import { TweetNewForm } from "./tweet/tweet-new-form";
 import { LoggedUserInfo } from "./logged-user-info";
 import { UserAuthInfo } from "../api/dto/auth-dtos";
+import { useNavigate } from "react-router-dom";
 
 export function NavBar()
 {
     const [showNewTweetForm, setShowNewTweetForm] = useState(false);
     const [userInfo, setUserInfo] = useState<UserAuthInfo | null>(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const user = localStorage.getItem("user");
@@ -26,9 +29,12 @@ export function NavBar()
         <Wrapper>
             <Logo src={logo}/>
             <ItemList>
-                <Item><FaHome/> Home</Item>
-                <Item><FaHashtag /> Explore</Item>
-                <Item><FaRegUser/> Profile</Item>
+                <Item onClick={() => navigate('/')}><FaHome/> Home</Item>
+                <Item onClick={() => navigate('/explore')}><FaHashtag /> Explore</Item>
+                
+                {userInfo &&
+                    <Item onClick={() => navigate(`/profile/${userInfo?.id}`)}><FaRegUser/> My Profile</Item>
+                }
             </ItemList>
 
             {userInfo &&
@@ -77,9 +83,15 @@ const ItemList = styled.div`
 `;
 
 const Item = styled.div`
+    cursor: pointer;
+
     & svg {
         vertical-align: text-top;
         margin-right: 0.5rem;
+    }
+
+    &:hover {
+        color: color-mix(in srgb, var(--color-bg-4) 80%, white);
     }
 `;
 
