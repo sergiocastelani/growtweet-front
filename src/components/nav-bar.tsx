@@ -3,6 +3,7 @@ import logo from "../assets/logo.svg";
 import { FaHashtag, FaHome, FaRegUser } from "react-icons/fa";
 import { useState } from "react";
 import { TweetNewForm } from "./tweet/tweet-new-form";
+import { LoggedUserInfo } from "./logged-user-info";
 
 export function NavBar()
 {
@@ -16,16 +17,18 @@ export function NavBar()
                 <Item><FaHashtag /> Explore</Item>
                 <Item><FaRegUser/> Profile</Item>
             </ItemList>
+
             <CreateTweetButton onClick={() => setShowNewTweetForm(true)}>
                 + Tweet Now
             </CreateTweetButton>
-
             {showNewTweetForm &&
                 <TweetNewForm 
                     onCreated={() => window.location.reload()}
                     onCancel={() => setShowNewTweetForm(false)}
                 />
             }
+
+            <LoggedUserInfoStyled/>
         </Wrapper>
     );
 }
@@ -34,7 +37,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    width: 10rem;
+    width: 13rem;
     padding: 1rem 1rem 0 10px;
     border-right: 1px solid color-mix(in srgb, var(--color-3) 30%, transparent);
 `;
@@ -70,4 +73,9 @@ const CreateTweetButton = styled.button`
     &:hover {
         background-color: color-mix(in srgb, var(--color-bg-4) 80%, white);
     }
+`;
+
+const LoggedUserInfoStyled = styled(LoggedUserInfo)`
+    position: absolute;
+    bottom: 1rem;
 `;

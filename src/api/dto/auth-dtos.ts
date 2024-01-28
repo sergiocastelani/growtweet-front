@@ -7,7 +7,7 @@ export interface UserAuthInfo
     email: string;
     name: string;
     token: string;
-    pictureUrl: string;
+    pictureUrl: string | null;
 }
 
 export type UserAuthInfoDTO = CommonResponse<UserAuthInfo>;

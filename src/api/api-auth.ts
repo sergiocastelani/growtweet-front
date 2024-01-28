@@ -14,6 +14,9 @@ export class ApiAuth extends ApiConnection
         return super.post('/auth/login', {email, password})
             .then((response: AxiosResponse<UserAuthInfoDTO, any>) => {
                 const data = response.data?.data;
+                if (data?.pictureUrl?.trim().length === 0)
+                    data.pictureUrl = null;
+
                 localStorage.setItem('user', JSON.stringify(data));
                 return response;
             });
