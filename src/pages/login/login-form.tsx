@@ -30,7 +30,7 @@ export function LoginForm(props: LoginFormProps)
 
     return (
         <Wrapper onSubmit={submitHandler}>
-            <Input type="text" name="email" placeholder="user email" />
+            <Input type="text" name="email" placeholder="user email" autoFocus />
 
             <Input type="password" name="password" placeholder="Password" />
 

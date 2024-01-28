@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/login/login-page";
 import './app-style.css'
 import { ProfilePage } from "./pages/profile-page";
 import { ExplorePage } from "./pages/explore-page";
+import { NewAccountPage } from "./pages/new-account/new-account-page";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage/>,
+  },
+  {
+    path: "/new-account",
+    element: <NewAccountPage/>,
   },
   {
     path: "/profile/:userId",

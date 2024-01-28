@@ -21,6 +21,9 @@ export function LoginPage()
                 <RightPanel>
                     <h1>Come in...</h1>
                     <LoginForm onSuccess={()=> navigate('/')}/>
+                    <CreateAccount onClick={() => navigate('/new-account')}>
+                        Create your new account
+                    </CreateAccount>
                 </RightPanel>
             </MainPanel>
         </Wrapper>
@@ -85,4 +88,12 @@ const RightPanel = styled.div`
     color: var(--color-fg-4);
     padding: 50px;
     border-radius: 0px 20px 20px 0;
+`;
+
+const CreateAccount = styled.div`
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    align-self: end;
 `;

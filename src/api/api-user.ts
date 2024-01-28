@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
-import { UserDisplayInfoDTO } from "./dto/user-dtos";
+import { UserDisplayInfoDTO, UserRegistration } from "./dto/user-dtos";
 
 export class ApiUser extends ApiConnection 
 {
@@ -14,4 +14,8 @@ export class ApiUser extends ApiConnection
         return super.get(`/user/${userId}`);
     }
 
+    async create(user: UserRegistration) : Promise<AxiosResponse<UserDisplayInfoDTO,any>>
+    {
+        return super.post(`/user`, user);
+    }
 }
