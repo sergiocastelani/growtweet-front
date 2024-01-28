@@ -7,17 +7,12 @@ import { ApiAuth } from "../api/api-auth";
 export interface LoggedUserInfoProps
 {
     className?: string;
+    userInfo: UserAuthInfo | null;
 }
 
 export function LoggedUserInfo( props: LoggedUserInfoProps)
 {
-    const [userInfo, setUserInfo] = useState<UserAuthInfo | null>(null);
-
-    useEffect(() => {
-        const user = localStorage.getItem("user");
-        if(user)
-            setUserInfo(JSON.parse(user));
-    },[]);
+    const { userInfo } = props;
 
     const logoutHandler = () => {
         (new ApiAuth()).logout()
