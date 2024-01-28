@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
-import { TweetsDTO } from "./dto/tweet-types";
+import { TweetsDTO } from "./dto/tweet-dtos";
 
 export class ApiTweet extends ApiConnection 
 {

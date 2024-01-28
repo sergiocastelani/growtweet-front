@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
-import { UserAuthInfoDTO } from "./dto/auth-types";
+import { UserAuthInfoDTO } from "./dto/auth-dtos";
 
 export class ApiAuth extends ApiConnection 
 {

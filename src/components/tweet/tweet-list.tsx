@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { Tweet } from "../../api/dto/tweet-types";
+import { Tweet } from "../../api/dto/tweet-dtos";
 import { TweetDisplay } from "./tweet-display";
 
 export interface TweetListProps 
