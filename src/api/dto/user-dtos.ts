@@ -1,3 +1,5 @@
+import { CommonResponse } from "./common-response";
+
 export interface UserDisplayInfo
 {
     id: number;
@@ -6,3 +8,4 @@ export interface UserDisplayInfo
     pictureUrl: string;
 }
 
+export type UserDisplayInfoDTO = CommonResponse<UserDisplayInfo>;

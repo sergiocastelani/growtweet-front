@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { UserAuthInfo } from "../api/dto/auth-dtos";
 import { styled } from "styled-components";
 import emptyAvatar from '../assets/empty_avatar.png'
