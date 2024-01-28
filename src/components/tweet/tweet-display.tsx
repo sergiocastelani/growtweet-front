@@ -5,6 +5,7 @@ import { HiOutlineChatBubbleLeft } from "react-icons/hi2";
 import { IoIosHeart, IoMdHeartEmpty } from "react-icons/io";
 import { ApiTweet } from "../../api/api-tweet";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface TweetDisplayProps 
 {
@@ -38,6 +39,8 @@ export function TweetDisplay(props: TweetDisplayProps)
     const [liked, setLiked] = useState(tweet.liked);
     const [totalLikes, setTotalLikes] = useState(tweet.totalLikes);
 
+    const navigate = useNavigate();
+
     const likeHandler = async () =>
     {
         await (new ApiTweet()).like(tweet.id);
@@ -58,7 +61,9 @@ export function TweetDisplay(props: TweetDisplayProps)
             <Description>
                 <header>
                     <UserName>{tweet.user.name}</UserName>
-                    <UserTag>@{tweet.user.username}</UserTag> 
+                    <UserTag onClick={()=>{ navigate(`/profile/${tweet.user.id}`) }}>
+                        @{tweet.user.username}
+                    </UserTag> 
                     • 
                     <RelativeTime>{relativeTimeString(tweet.createdAt)}</RelativeTime>
                 </header>
@@ -123,6 +128,7 @@ const UserName = styled.span`
 const UserTag = styled.span`
     color: color-mix(in srgb, var(--color-3) 50%, transparent);
     margin-right: 0.5rem;
+    cursor: pointer;
 `;
 
 const RelativeTime = styled.span`
