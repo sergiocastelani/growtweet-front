@@ -7,6 +7,7 @@ export interface Tweet
     repliedId: number | null;
     content: string;
     picture: string | null;
+    createdAt: Date;
 }
 
 export type TweetDTO = CommonResponse<Tweet>;

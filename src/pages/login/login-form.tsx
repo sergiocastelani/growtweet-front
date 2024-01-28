@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { ApiConnection } from "../../api/api-connection";
 import React from "react";
 import { ApiAuth } from "../../api/api-auth";
 
@@ -21,8 +20,7 @@ export function LoginForm(props: LoginFormProps)
         const password = (event.target as HTMLFormElement).password.value;
 
         new ApiAuth().login(email, password)
-            .then((response) => {
-                localStorage.setItem(ApiConnection.AUTH_TOKEN_NAME, response.data?.data?.token);
+            .then(() => {
                 props.onSuccess?.();
             })
             .catch((reason: any) => {

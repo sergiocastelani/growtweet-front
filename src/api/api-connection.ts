@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { UserAuthInfo } from "./dto/auth-dtos";
 
 export class ApiConnection 
 {
@@ -9,10 +10,14 @@ export class ApiConnection
 
     constructor() 
     {
-        const authToken = localStorage.getItem(ApiConnection.AUTH_TOKEN_NAME);
-
         const headers : any = {};
-        headers[ApiConnection.AUTH_TOKEN_NAME] = authToken;
+
+        const storedUser = localStorage.getItem('user');
+        if(storedUser)
+        {
+            const user : UserAuthInfo = JSON.parse(storedUser);
+            headers[ApiConnection.AUTH_TOKEN_NAME] = user.token;
+        }
 
         this.axiosInstance = axios.create({
             baseURL: ApiConnection.BASE_URL,
@@ -51,7 +56,7 @@ function unauthorizedErrorHandler(error: any)
     {
         if (error.response?.status === 401)
         {
-            localStorage.removeItem(ApiConnection.AUTH_TOKEN_NAME);
+            localStorage.removeItem('user');
             window.location.href = "/login";
         }
     }

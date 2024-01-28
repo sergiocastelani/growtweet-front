@@ -14,10 +14,7 @@ export class ApiAuth extends ApiConnection
         return super.post('/auth/login', {email, password})
             .then((response: AxiosResponse<UserAuthInfoDTO, any>) => {
                 const data = response.data?.data;
-                localStorage.setItem(ApiConnection.AUTH_TOKEN_NAME, data?.token);
-                localStorage.setItem('id', data.id.toString());
-                localStorage.setItem('name', data.name);
-                localStorage.setItem('email', data.email);
+                localStorage.setItem('user', JSON.stringify(data));
                 return response;
             });
     }
@@ -26,10 +23,7 @@ export class ApiAuth extends ApiConnection
     {
         return super.post('/auth/logout')
             .then((response) => {
-                localStorage.removeItem(ApiConnection.AUTH_TOKEN_NAME);
-                localStorage.removeItem('id');
-                localStorage.removeItem('name');
-                localStorage.removeItem('email');
+                localStorage.removeItem('user');
                 return response;
             });
     }
