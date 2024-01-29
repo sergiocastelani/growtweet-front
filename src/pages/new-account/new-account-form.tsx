@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { UserRegistration } from "../../api/dto/user-dtos";
 import { ApiUser } from "../../api/api-user";
-import { useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
 
 export interface NewAccountFormProps 
@@ -14,14 +13,12 @@ export function NewAccountForm(props: NewAccountFormProps)
 {
     const { register, handleSubmit, formState: { errors } } = useForm<UserRegistration>();
 
-    const navigate = useNavigate();
-
     const onSubmit = async (formData: UserRegistration) => 
     {
         try 
         {
             await (new ApiUser()).create(formData);
-            navigate('/');
+            props.onSuccess?.();
         } 
         catch (error) 
         {
