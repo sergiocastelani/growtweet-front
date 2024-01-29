@@ -6,7 +6,7 @@ import { ProfilePage } from "./pages/profile-page";
 import { ExplorePage } from "./pages/explore-page";
 import { NewAccountPage } from "./pages/new-account/new-account-page";
 
-const router = createBrowserRouter([
+export const appRouter = createBrowserRouter([
   {
     path: "/",
     element: <FeedPage/>,
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <RouterProvider router={appRouter} />
   )
 }
 

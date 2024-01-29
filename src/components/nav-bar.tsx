@@ -22,7 +22,7 @@ export function NavBar()
 
     function loginButtonHandler()
     {
-        window.location.href = "/login";
+        navigate('/login');
     }
 
     return (

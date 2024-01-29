@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { UserAuthInfo } from "./dto/auth-dtos";
+import { appRouter } from "../App";
 
 export class ApiConnection 
 {
@@ -57,7 +58,7 @@ function unauthorizedErrorHandler(error: any)
         if (error.response?.status === 401)
         {
             localStorage.removeItem('user');
-            window.location.href = "/login";
+            appRouter.navigate('/login');
         }
     }
 
