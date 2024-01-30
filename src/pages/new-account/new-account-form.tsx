@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { UserRegistration } from "../../api/dto/user-dtos";
 import { ApiUser } from "../../api/api-user";
 import { isAxiosError } from "axios";
+import { ApiAuth } from "../../api/api-auth";
 
 export interface NewAccountFormProps 
 {
@@ -17,7 +18,12 @@ export function NewAccountForm(props: NewAccountFormProps)
     {
         try 
         {
-            await (new ApiUser()).create(formData);
+            await (new ApiUser()).create(formData)
+                .then((response) => {
+                    ApiAuth.setUserAsLoggedIn(response.data.data);
+                    props.onSuccess?.();
+                    return response;
+                });
             props.onSuccess?.();
         } 
         catch (error) 

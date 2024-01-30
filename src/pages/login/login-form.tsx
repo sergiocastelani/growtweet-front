@@ -19,7 +19,7 @@ export function LoginForm(props: LoginFormProps)
         const email = (event.target as HTMLFormElement).email.value;
         const password = (event.target as HTMLFormElement).password.value;
 
-        new ApiAuth().login(email, password)
+        (new ApiAuth()).login(email, password)
             .then(() => {
                 props.onSuccess?.();
             })

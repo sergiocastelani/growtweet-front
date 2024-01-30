@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
-import { UserAuthInfoDTO } from "./dto/auth-dtos";
+import { UserAuthInfo, UserAuthInfoDTO } from "./dto/auth-dtos";
 
 export class ApiAuth extends ApiConnection 
 {
@@ -13,11 +13,7 @@ export class ApiAuth extends ApiConnection
     {
         return super.post('/auth/login', {email, password})
             .then((response: AxiosResponse<UserAuthInfoDTO, any>) => {
-                const data = response.data?.data;
-                if (data?.pictureUrl?.trim().length === 0)
-                    data.pictureUrl = null;
-
-                localStorage.setItem('user', JSON.stringify(data));
+                ApiAuth.setUserAsLoggedIn(response.data.data);
                 return response;
             });
     }
@@ -29,5 +25,13 @@ export class ApiAuth extends ApiConnection
                 localStorage.removeItem('user');
                 return response;
             });
+    }
+
+    static setUserAsLoggedIn(user: UserAuthInfo)
+    {
+        if (user.pictureUrl?.trim().length === 0)
+            user.pictureUrl = null;
+
+        localStorage.setItem('user', JSON.stringify(user));
     }
 }
