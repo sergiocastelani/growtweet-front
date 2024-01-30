@@ -38,7 +38,10 @@ export function ProfilePage()
             <CentralWidget>
                 <Header>
                     <Tittle>Profile</Tittle>
-                    <Picture src={userProfile?.pictureUrl ?? emptyAvatar}/>
+                    {userProfile?.pictureUrl ?
+                        <Picture src={userProfile?.pictureUrl}/> :
+                        <Picture src={emptyAvatar}/>
+                    }
                     <UserName>{userProfile?.name}</UserName>
                     <UserTag>@{userProfile?.username}</UserTag>
                 </Header>

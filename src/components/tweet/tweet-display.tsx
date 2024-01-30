@@ -57,7 +57,10 @@ export function TweetDisplay(props: TweetDisplayProps)
 
     return (
         <Wrapper>
-            <Picture src={tweet.user.pictureUrl ?? emptyAvatar}/>
+            {tweet.user.pictureUrl ?
+                <Picture src={tweet.user.pictureUrl}/> :
+                <Picture src={emptyAvatar}/>
+            }
             <Description>
                 <header>
                     <UserName>{tweet.user.name}</UserName>
