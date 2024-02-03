@@ -2,6 +2,8 @@ import { UserAuthInfo } from "../api/dto/auth-dtos";
 import { styled } from "styled-components";
 import emptyAvatar from '../assets/empty_avatar.png'
 import { ApiAuth } from "../api/api-auth";
+import { useState } from "react";
+import { PulseLoader } from "react-spinners";
 
 export interface LoggedUserInfoProps
 {
@@ -12,12 +14,19 @@ export interface LoggedUserInfoProps
 export function LoggedUserInfo( props: LoggedUserInfoProps)
 {
     const { userInfo } = props;
+    const [loading, setLoading]= useState(false);
 
     const logoutHandler = () => {
+        if (loading)
+            return;
+
+        setLoading(true);
+
         (new ApiAuth()).logout()
             .then(() => {
                 window.location.reload();
-            });
+            })
+            .finally(() => setLoading(false));
     }
 
     if (! userInfo)
@@ -29,7 +38,8 @@ export function LoggedUserInfo( props: LoggedUserInfoProps)
             <Description>
                 <UserName>{userInfo.name}</UserName>
                 <UserTag>@{userInfo.username}</UserTag>
-                <Logout onClick={logoutHandler}>Logout</Logout>
+                <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
+                {loading || <Logout onClick={logoutHandler}>Logout</Logout>}
             </Description>
         </Wrapper>
     );
@@ -71,3 +81,7 @@ const Logout = styled.div`
     cursor: pointer;
     font-size: smaller;
 `
+const PulseLoaderStyled = styled(PulseLoader)`
+    margin-top: 2rem;
+    margin-left: -3rem;
+`;

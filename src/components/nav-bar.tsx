@@ -126,6 +126,7 @@ const LoginButton = styled.button`
 `;
 
 const LoggedUserInfoStyled = styled(LoggedUserInfo)`
-    position: absolute;
+    position: fixed;
     bottom: 1rem;
+    max-width: 13rem;
 `;
