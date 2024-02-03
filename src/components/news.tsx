@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { styled } from "styled-components";
 
 export function News()
@@ -22,7 +23,7 @@ export function News()
                     <header>Cinema - 15 min ago</header>
                     <p>Film of the Week: 'The Zone of Interest'</p>
                 </Item>
-                <a href="#">Show more ...</a>
+                <Link to="/explore">Show more ...</Link>
             </Box>
         </Wrapper>
     );

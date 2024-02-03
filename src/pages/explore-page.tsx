@@ -8,7 +8,7 @@ export function ExplorePage()
         <Wrapper>
             <NavBar/>
             <CentralWidget>
-                <Tittle>Explore</Tittle>
+                <Tittle>Explore <small>(static demo page)</small></Tittle>
                 <Item>
                     <header>Sports - 45 min ago</header>
                     <p>Why Pete Carroll was one of the NFL's 'best ever' coaches</p>
@@ -60,6 +60,11 @@ const Tittle = styled.header`
     border-color: color-mix(in srgb, var(--color-3) 30%, transparent);
     border-style: solid;
     border-width: 0 0 1px 0;
+
+    small {
+        font-size: 0.7rem;
+        font-weight: normal;
+    }
 `
 const Item = styled.div`
     margin: 1rem 0 1.5rem 1rem;

@@ -49,6 +49,9 @@ export function TweetNewForm(props: TweetNewFormProps)
 
     const handleCancel = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
     {
+        if (loading)
+            return;
+
         event.preventDefault();
         setLoading(true);
         props.onCancel();
