@@ -4,6 +4,8 @@ import { UserRegistration } from "../../api/dto/user-dtos";
 import { ApiUser } from "../../api/api-user";
 import { isAxiosError } from "axios";
 import { ApiAuth } from "../../api/api-auth";
+import { PulseLoader } from "react-spinners";
+import { useState } from "react";
 
 export interface NewAccountFormProps 
 {
@@ -12,18 +14,26 @@ export interface NewAccountFormProps
 
 export function NewAccountForm(props: NewAccountFormProps)
 {
+    const [loading, setLoading] = useState(false);
+
     const { register, handleSubmit, formState: { errors } } = useForm<UserRegistration>();
 
     const onSubmit = async (formData: UserRegistration) => 
     {
+        if (loading)
+            return;
+
         try 
         {
+            setLoading(true);
+
             await (new ApiUser()).create(formData)
                 .then((response) => {
                     ApiAuth.setUserAsLoggedIn(response.data.data);
-                    props.onSuccess?.();
                     return response;
                 });
+
+            setLoading(false);
             props.onSuccess?.();
         } 
         catch (error) 
@@ -38,6 +48,10 @@ export function NewAccountForm(props: NewAccountFormProps)
             }
 
             console.error(error);
+        }
+        finally 
+        {
+            setLoading(false);
         }
     }
 
@@ -90,7 +104,10 @@ export function NewAccountForm(props: NewAccountFormProps)
             <label htmlFor="pictureUrl">Picture URL:</label>
             <Input { ...register("pictureUrl") } />
 
-            <Button type="submit">Create</Button>
+            <Button type="submit" disabled={loading}>
+                {loading || 'Create'}
+                <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
+            </Button>
         </Form>
     );
 }
@@ -122,4 +139,12 @@ const Button = styled.button`
     color: var(--color-fg-2);
     padding: 0.5rem;
     font-weight: bold;
+
+    &[disabled] {
+        background-color: var(--color-bg-disabled);
+    }
+`;
+
+const PulseLoaderStyled = styled(PulseLoader)`
+    margin-top: 2px;
 `;

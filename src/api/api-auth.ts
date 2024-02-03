@@ -20,11 +20,11 @@ export class ApiAuth extends ApiConnection
 
     async logout()
     {
-        return super.post('/auth/logout')
-            .then((response) => {
-                localStorage.removeItem('user');
-                return response;
-            });
+        try {
+            await super.post('/auth/logout');
+        } finally {
+            localStorage.removeItem('user');
+        }
     }
 
     static setUserAsLoggedIn(user: UserAuthInfo)

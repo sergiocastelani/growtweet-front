@@ -23,10 +23,10 @@ export function LoggedUserInfo( props: LoggedUserInfoProps)
         setLoading(true);
 
         (new ApiAuth()).logout()
-            .then(() => {
+            .finally(() => {
                 window.location.reload();
-            })
-            .finally(() => setLoading(false));
+                setLoading(false)
+            });
     }
 
     if (! userInfo)
