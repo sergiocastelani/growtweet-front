@@ -22,7 +22,7 @@ export function FeedPage()
             <NavBar/>
             <CentralWidget>
                 <Tittle>Home</Tittle>
-                <TweetList tweets={tweets}/>
+                <TweetList tweets={tweets} loading={tweets.length === 0}/>
             </CentralWidget>
             <News/>
         </Wrapper>

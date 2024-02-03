@@ -1,14 +1,14 @@
 import { styled } from "styled-components";
-import { NavBar } from "../components/nav-bar";
-import { TweetList } from "../components/tweet/tweet-list";
-import { News } from "../components/news";
+import { NavBar } from "../../components/nav-bar";
+import { TweetList } from "../../components/tweet/tweet-list";
+import { News } from "../../components/news";
 import { useEffect, useState } from "react";
-import { TweetDisplayInfo } from "../api/dto/tweet-dtos";
-import { ApiTweet } from "../api/api-tweet";
+import { TweetDisplayInfo } from "../../api/dto/tweet-dtos";
+import { ApiTweet } from "../../api/api-tweet";
 import { useParams } from "react-router-dom";
-import emptyAvatar from '../assets/empty_avatar.png';
-import { UserDisplayInfo } from "../api/dto/user-dtos";
-import { ApiUser } from "../api/api-user";
+import { UserDisplayInfo } from "../../api/dto/user-dtos";
+import { ApiUser } from "../../api/api-user";
+import { ProfileUserInfo } from "./profile-user-info";
 
 export function ProfilePage()
 {
@@ -38,14 +38,9 @@ export function ProfilePage()
             <CentralWidget>
                 <Header>
                     <Tittle>Profile</Tittle>
-                    {userProfile?.pictureUrl ?
-                        <Picture src={userProfile?.pictureUrl}/> :
-                        <Picture src={emptyAvatar}/>
-                    }
-                    <UserName>{userProfile?.name}</UserName>
-                    <UserTag>@{userProfile?.username}</UserTag>
+                    <ProfileUserInfo userProfile={userProfile}/>
                 </Header>
-                <TweetList tweets={tweets}/>
+                <TweetList tweets={tweets} loading={tweets.length === 0}/>
             </CentralWidget>
             <News/>
         </Wrapper>
@@ -85,20 +80,3 @@ const Tittle = styled.header`
     font-size: 1.2rem;
     font-weight: bold;
 `
-const Picture = styled.img`
-    width: 6rem;
-    height: 6rem;
-    border-radius: 50%;
-    border: 4px solid var(--color-fg-1);
-`;
-
-const UserName = styled.span`
-    font-weight: bold;
-    margin-left: 0.5rem;
-`;
-
-const UserTag = styled.span`
-    margin-left: 0.5rem;
-    font-weight: 100;
-    color: color-mix(in srgb, var(--color-fg-2) 50%, transparent);
-`;

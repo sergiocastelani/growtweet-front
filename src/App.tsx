@@ -2,7 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import { FeedPage } from "./pages/feed-page";
 import { LoginPage } from "./pages/login/login-page";
 import './app-style.css'
-import { ProfilePage } from "./pages/profile-page";
+import { ProfilePage } from "./pages/profile/profile-page";
 import { ExplorePage } from "./pages/explore-page";
 import { NewAccountPage } from "./pages/new-account/new-account-page";
 
