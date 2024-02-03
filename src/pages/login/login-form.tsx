@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 import { ApiAuth } from "../../api/api-auth";
+import { PulseLoader } from "react-spinners";
 
 export interface LoginFormProps 
 {
@@ -10,11 +11,13 @@ export interface LoginFormProps
 export function LoginForm(props: LoginFormProps)
 {
     const [errorMessage, setErrorMessage] = React.useState<string | undefined>(undefined);
+    const [loading, setLoading] = React.useState(false);
 
     const submitHandler = (event: React.FormEvent<HTMLFormElement>) =>
     {
         event.preventDefault();
         setErrorMessage(undefined);
+        setLoading(true);
 
         const email = (event.target as HTMLFormElement).email.value;
         const password = (event.target as HTMLFormElement).password.value;
@@ -25,7 +28,9 @@ export function LoginForm(props: LoginFormProps)
             })
             .catch((reason: any) => {
                 setErrorMessage(reason.response?.data?.message ?? reason.message);
-            });
+            })
+            .finally(() => setLoading(false));
+
     }
 
     return (
@@ -34,9 +39,13 @@ export function LoginForm(props: LoginFormProps)
 
             <Input type="password" name="password" placeholder="Password" />
 
-            {errorMessage ? <ErrorLabel>{errorMessage}</ErrorLabel> : ''}
+            {errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}
 
-            <Button type="submit">Login</Button>
+            <Button type="submit" disabled={loading}>
+                {loading || 'Login'}
+                <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
+            </Button>
+            
         </Wrapper>
     );
 }
@@ -68,4 +77,12 @@ const Button = styled.button`
     color: var(--color-fg-2);
     padding: 0.5rem;
     font-weight: bold;
+
+    &[disabled] {
+        background-color: var(--color-bg-disabled);
+    }
+`;
+
+const PulseLoaderStyled = styled(PulseLoader)`
+    margin-top: 2px;
 `;
