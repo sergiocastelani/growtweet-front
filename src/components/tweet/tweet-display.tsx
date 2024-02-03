@@ -43,16 +43,16 @@ export function TweetDisplay(props: TweetDisplayProps)
 
     const likeHandler = async () =>
     {
-        await (new ApiTweet()).like(tweet.id);
         setLiked(true);
         setTotalLikes(totalLikes + 1);
+        await (new ApiTweet()).like(tweet.id);
     }
 
     const unlikeHandler = async () =>
     {
-        await (new ApiTweet()).unlike(tweet.id);
         setLiked(false);
         setTotalLikes(totalLikes - 1);
+        await (new ApiTweet()).unlike(tweet.id);
     }
 
     return (
