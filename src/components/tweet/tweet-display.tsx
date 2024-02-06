@@ -120,6 +120,7 @@ export function TweetDisplay(props: TweetDisplayProps)
 
                 {replying && 
                     <TweetNewForm 
+                        replyId={tweet.id}
                         onCancel={replyCanceled}
                         onCreated={replyCreated}
                     />
