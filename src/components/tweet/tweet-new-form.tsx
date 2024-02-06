@@ -8,6 +8,7 @@ import { PulseLoader } from "react-spinners";
 
 export interface TweetNewFormProps
 {
+    replyId?: number;
     onCreated: () => void;
     onCancel: () => void;
 }
@@ -25,7 +26,12 @@ export function TweetNewForm(props: TweetNewFormProps)
         try 
         {
             setLoading(true);
-            await (new ApiTweet()).create(formData.content);
+
+            if(props.replyId !== undefined)
+                await (new ApiTweet()).reply(props.replyId, formData.content);
+            else
+                await (new ApiTweet()).create(formData.content);
+
             setLoading(false);
             props.onCreated();
         } 
@@ -44,6 +50,7 @@ export function TweetNewForm(props: TweetNewFormProps)
 
             alert("Unknow error occurred!!");
             console.error(error);
+            props.onCancel();
         }
     }
 

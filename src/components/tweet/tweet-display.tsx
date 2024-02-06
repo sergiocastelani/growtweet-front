@@ -6,6 +6,8 @@ import { IoIosHeart, IoMdHeartEmpty } from "react-icons/io";
 import { ApiTweet } from "../../api/api-tweet";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { TweetNewForm } from "./tweet-new-form";
+import { ApiAuth } from "../../api/api-auth";
 
 export interface TweetDisplayProps 
 {
@@ -38,6 +40,7 @@ export function TweetDisplay(props: TweetDisplayProps)
     const tweet = props.tweet;
     const [liked, setLiked] = useState(tweet.liked);
     const [totalLikes, setTotalLikes] = useState(tweet.totalLikes);
+    const [replying, setReplying] = useState(false);
 
     const navigate = useNavigate();
 
@@ -55,6 +58,20 @@ export function TweetDisplay(props: TweetDisplayProps)
         await (new ApiTweet()).unlike(tweet.id);
     }
 
+    const startReply = async () => {
+        await new ApiAuth().check();
+        setReplying(true);
+    }
+
+    const replyCanceled = () => {
+        setReplying(false);
+    }
+
+    const replyCreated = () => {
+        setReplying(false);
+        window.location.reload();
+    }
+
     return (
         <Wrapper>
             {tweet.user.pictureUrl ?
@@ -63,29 +80,50 @@ export function TweetDisplay(props: TweetDisplayProps)
             }
             <Description>
                 <header>
-                    <UserName>{tweet.user.name}</UserName>
-                    <UserTag onClick={()=>{ navigate(`/profile/${tweet.user.id}`) }}>
+                    <UserName>
+                        {tweet.user.name}
+                    </UserName>
+                    <UserTag 
+                        onClick={()=>{ navigate(`/profile/${tweet.user.id}`) }
+                    }>
                         @{tweet.user.username}
                     </UserTag> 
                     • 
-                    <RelativeTime>{relativeTimeString(tweet.createdAt)}</RelativeTime>
+                    <RelativeTime>
+                        {relativeTimeString(tweet.createdAt)}
+                    </RelativeTime>
                 </header>
 
-                <Content>{tweet.content}</Content>
+                <Content>
+                    {tweet.content}
+                </Content>
 
                 <footer>
                     <Icon>
-                        <HiOutlineChatBubbleLeft/>
+                        <HiOutlineChatBubbleLeft 
+                            onClick={startReply}
+                        />
                         <span>{tweet.totalReplies}</span>
                     </Icon>
                     <Icon>
                         {liked ?
-                            <IoIosHeart className="lighted" onClick={unlikeHandler}/> :
+                            <IoIosHeart 
+                                className="lighted" 
+                                onClick={unlikeHandler}
+                            /> 
+                        :
                             <IoMdHeartEmpty onClick={likeHandler}/>
                         }
                         <span>{totalLikes}</span>
                     </Icon>
                 </footer>
+
+                {replying && 
+                    <TweetNewForm 
+                        onCancel={replyCanceled}
+                        onCreated={replyCreated}
+                    />
+                }
             </Description>
         </Wrapper>
     );

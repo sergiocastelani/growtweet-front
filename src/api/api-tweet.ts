@@ -24,6 +24,11 @@ export class ApiTweet extends ApiConnection
         return super.post('/tweet', {content});
     }
 
+    async reply(replyId: number, content: string)
+    {
+        return super.post(`/reply/${replyId}`, {content});
+    }
+
     async like(id: number)
     {
         return super.post(`/like/${id}`);

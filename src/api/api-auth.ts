@@ -27,6 +27,11 @@ export class ApiAuth extends ApiConnection
         }
     }
 
+    async check()
+    {
+        await super.get('/auth/check');
+    }
+
     static setUserAsLoggedIn(user: UserAuthInfo)
     {
         if (user.pictureUrl?.trim().length === 0)
