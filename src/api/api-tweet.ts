@@ -14,6 +14,11 @@ export class ApiTweet extends ApiConnection
         return super.get('/tweet/all');
     }
 
+    async replies(tweetId: number) : Promise<AxiosResponse<TweetDisplayInfosDTO,any>>
+    {
+        return super.get(`/tweet/replies/${tweetId}`);
+    }
+
     async fromUserId(userId: number) : Promise<AxiosResponse<TweetDisplayInfosDTO,any>>
     {
         return super.get(`/tweet/user/${userId}`);

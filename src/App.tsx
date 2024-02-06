@@ -5,6 +5,7 @@ import './app-style.css'
 import { ProfilePage } from "./pages/profile/profile-page";
 import { ExplorePage } from "./pages/explore-page";
 import { NewAccountPage } from "./pages/new-account/new-account-page";
+import { RepliesPage } from "./pages/replies-page";
 
 export const appRouter = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const appRouter = createBrowserRouter([
   {
     path: "/profile/:userId",
     element: <ProfilePage/>,
+  },
+  {
+    path: "/replies/:tweetId",
+    element: <RepliesPage/>,
   },
 ]);
 

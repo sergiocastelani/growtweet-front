@@ -8,10 +8,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TweetNewForm } from "./tweet-new-form";
 import { ApiAuth } from "../../api/api-auth";
+import { LuArrowDownToLine, LuArrowUpToLine } from "react-icons/lu";
 
 export interface TweetDisplayProps 
 {
     tweet: TweetDisplayInfo;
+    canNavigateDown?: boolean;
+    canNavigateUp?: boolean;
 }
 
 function relativeTimeString(dateStr: string) 
@@ -37,7 +40,12 @@ function relativeTimeString(dateStr: string)
 
 export function TweetDisplay(props: TweetDisplayProps) 
 {
-    const tweet = props.tweet;
+    const {
+        tweet, 
+        canNavigateDown = true, 
+        canNavigateUp = true
+    } = props;
+
     const [liked, setLiked] = useState(tweet.liked);
     const [totalLikes, setTotalLikes] = useState(tweet.totalLikes);
     const [replying, setReplying] = useState(false);
@@ -58,18 +66,26 @@ export function TweetDisplay(props: TweetDisplayProps)
         await (new ApiTweet()).unlike(tweet.id);
     }
 
-    const startReply = async () => {
+    const startReply = async () => 
+    {
         await new ApiAuth().check();
         setReplying(true);
     }
 
-    const replyCanceled = () => {
+    const replyCanceled = () => 
+    {
         setReplying(false);
     }
 
-    const replyCreated = () => {
+    const replyCreated = () => 
+    {
         setReplying(false);
         window.location.reload();
+    }
+
+    const openReplies = (tweetId: number) => 
+    {
+        navigate(`/replies/${tweetId}`);
     }
 
     return (
@@ -84,6 +100,7 @@ export function TweetDisplay(props: TweetDisplayProps)
                         {tweet.user.name}
                     </UserName>
                     <UserTag 
+                        title="Open user profile"
                         onClick={()=>{ navigate(`/profile/${tweet.user.id}`) }
                     }>
                         @{tweet.user.username}
@@ -100,22 +117,46 @@ export function TweetDisplay(props: TweetDisplayProps)
 
                 <footer>
                     <Icon>
-                        <HiOutlineChatBubbleLeft 
-                            onClick={startReply}
-                        />
-                        <span>{tweet.totalReplies}</span>
-                    </Icon>
-                    <Icon>
                         {liked ?
                             <IoIosHeart 
+                                title="Unlike it"
                                 className="lighted" 
                                 onClick={unlikeHandler}
                             /> 
                         :
-                            <IoMdHeartEmpty onClick={likeHandler}/>
+                            <IoMdHeartEmpty 
+                                title="Like it"
+                                onClick={likeHandler}
+                            />
                         }
                         <span>{totalLikes}</span>
                     </Icon>
+
+                    <Icon>
+                        <HiOutlineChatBubbleLeft 
+                            title="Reply"
+                            onClick={startReply}
+                        />
+                        <span>{tweet.totalReplies}</span>
+                    </Icon>
+
+                    {canNavigateDown && tweet.totalReplies > 0 &&
+                    <Icon>
+                        <LuArrowDownToLine 
+                            title="Show replies"
+                            onClick={() => openReplies(tweet.id)}
+                        />
+                    </Icon>
+                    }
+
+                    {canNavigateUp && tweet.repliedId &&
+                    <Icon>
+                        <LuArrowUpToLine 
+                            title="Show replied tweet"
+                            onClick={() => openReplies(tweet.repliedId!)}
+                        />
+                    </Icon>
+                    }
                 </footer>
 
                 {replying && 
