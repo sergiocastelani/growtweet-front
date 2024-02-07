@@ -21,9 +21,9 @@ export function LoginPage()
                 <RightPanel>
                     <h1>Come in...</h1>
                     <LoginForm onSuccess={()=> navigate('/')}/>
-                    <CreateAccount onClick={() => navigate('/new-account')}>
+                    <CreateAccountButton onClick={() => navigate('/new-account')}>
                         Create your new account
-                    </CreateAccount>
+                    </CreateAccountButton>
                 </RightPanel>
             </MainPanel>
         </Wrapper>
@@ -48,7 +48,12 @@ const MainPanel = styled.div`
     height: 60%;
     min-height: 400px;
     width: 60%;
-    min-width: 300px;
+    min-width: 250px;
+
+    @media (width <= 768px) {
+        width: 80%;
+        flex-direction: column;
+    }
 `;
 
 const LeftPanel = styled.div`
@@ -76,6 +81,25 @@ const LeftPanel = styled.div`
         margin-top: 2rem;
         line-height: 1.5rem;
     }
+
+    @media (width <= 768px) {
+        padding: 20px;
+        border-radius: 10px 10px 0 0;
+
+        & h1 {
+            font-size: 2rem;
+        }
+
+        & h2 {
+            font-size: 1rem;
+        }
+
+        & p {
+            margin-top: 1rem;
+            line-height: 1.2rem;
+            font-size: 0.9rem;
+        }
+    }
 `;
 
 const RightPanel = styled.div`
@@ -88,9 +112,14 @@ const RightPanel = styled.div`
     color: var(--color-fg-4);
     padding: 50px;
     border-radius: 0px 20px 20px 0;
+
+    @media (width <= 768px) {
+        padding: 20px;
+        border-radius: 0 0 10px 10px;
+    }
 `;
 
-const CreateAccount = styled.div`
+const CreateAccountButton = styled.div`
     margin-top: 2rem;
     font-size: 0.8rem;
     cursor: pointer;
