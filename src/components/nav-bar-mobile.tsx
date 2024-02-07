@@ -3,9 +3,13 @@ import { FaHashtag, FaHome, FaRegUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { SlLogin } from "react-icons/sl";
 import { ApiAuth } from "../api/api-auth";
+import { useState } from "react";
+import { TweetNewForm } from "./tweet/tweet-new-form";
+import { BsPlusSquare } from "react-icons/bs";
 
 export function NavBarMobile()
 {
+    const [showNewTweetForm, setShowNewTweetForm] = useState(false);
     const userInfo = ApiAuth.getLoggedUser();
 
     const navigate = useNavigate();
@@ -19,8 +23,19 @@ export function NavBarMobile()
                 <Item onClick={() => navigate(`/profile/${userInfo?.id}`)}><FaRegUser/></Item>
             }
 
-            {!!userInfo ||
+            {userInfo &&
+                <Item onClick={() => setShowNewTweetForm(true)}><BsPlusSquare/></Item>
+            }
+
+            {(userInfo == null) &&
                 <Item onClick={() => navigate('/login')}><SlLogin/></Item>
+            }
+
+            {showNewTweetForm &&
+                <TweetNewForm 
+                    onCreated={() => window.location.reload()}
+                    onCancel={() => setShowNewTweetForm(false)}
+                />
             }
         </Wrapper>
     );

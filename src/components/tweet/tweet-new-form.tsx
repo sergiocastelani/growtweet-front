@@ -68,7 +68,9 @@ export function TweetNewForm(props: TweetNewFormProps)
     return (
         <Modal>
             <Form onSubmit={handleSubmit(onSubmit)}>
-                <label htmlFor="content">Your Message:</label>
+                <label htmlFor="content">
+                    {props.replyId ? "Post your reply:" : "Post your new message:"}
+                </label>
                 <textarea autoFocus rows={5} {
                     ...register("content", 
                     {
@@ -100,6 +102,7 @@ const Form = styled.form`
     flex-direction: column;
     width: 85vw;
     max-width: 700px;
+    font-size: 1rem;
 
     & > label {
         margin-bottom: 0.5rem;
