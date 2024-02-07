@@ -69,7 +69,7 @@ export function TweetNewForm(props: TweetNewFormProps)
         <Modal>
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <label htmlFor="content">Your Message:</label>
-                <textarea autoFocus {
+                <textarea autoFocus rows={5} {
                     ...register("content", 
                     {
                         required: "Message can't be empty", 
@@ -98,7 +98,8 @@ export function TweetNewForm(props: TweetNewFormProps)
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    width: 600px;
+    width: 85vw;
+    max-width: 700px;
 
     & > label {
         margin-bottom: 0.5rem;
@@ -116,7 +117,7 @@ const Form = styled.form`
 
 const ErrorMessage = styled.p`
     color: var(--color-danger-1);
-    margin: 0;
+    margin: 5px 0 0 0;
 `;
 
 const Footer = styled.footer`
@@ -136,11 +137,11 @@ const Cancel = styled.button`
 `;
 
 const Submit = styled.button`
-    background-color: var(--color-bg-4);
-    color: var(--color-fg-4);
+    background-color: var(--color-bg-2);
+    color: var(--color-fg-2);
 
-    &:hover[disabled=false] {
-        background-color: color-mix(in srgb, var(--color-bg-4) 80%, white);
+    &:not(:disabled):hover {
+        background-color: color-mix(in srgb, var(--color-bg-2) 80%, white);
     }
 
     &[disabled] {

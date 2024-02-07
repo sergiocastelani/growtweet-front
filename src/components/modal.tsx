@@ -32,7 +32,7 @@ const Backdrop = styled.div`
 `;
 
 const Dialog = styled.div`
-    max-width: 90%;
+    max-width: 98%;
     max-height: 95%;
     background-color: white;
     color: black;
