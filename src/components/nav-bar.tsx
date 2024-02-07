@@ -68,7 +68,7 @@ const Wrapper = styled.div`
     gap: 1rem;
     width: 13rem;
     padding: 1rem 1rem 0 10px;
-    border-right: 1px solid color-mix(in srgb, var(--color-3) 30%, transparent);
+    border: none;
 `;
 
 const Logo = styled.img`

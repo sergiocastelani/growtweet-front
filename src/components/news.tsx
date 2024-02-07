@@ -30,7 +30,10 @@ export function News()
 }
 
 const Wrapper = styled.div`
-    border-left: 1px solid color-mix(in srgb, var(--color-3) 30%, transparent);
+    border: none;
+    @media (width <= 1024px) {
+        display: none;
+    }
 `;
 
 const Box = styled.div`

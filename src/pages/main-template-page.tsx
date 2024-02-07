@@ -31,4 +31,6 @@ const CentralWidget = styled.div`
     padding: 0;
     width: 50%;
     max-width: 600px;
+    border: 1px solid color-mix(in srgb, var(--color-3) 30%, transparent);
+    border-width: 0 1px 0 1px;
 `;
