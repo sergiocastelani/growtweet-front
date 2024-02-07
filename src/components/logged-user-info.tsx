@@ -4,6 +4,7 @@ import emptyAvatar from '../assets/empty_avatar.png'
 import { ApiAuth } from "../api/api-auth";
 import { useState } from "react";
 import { PulseLoader } from "react-spinners";
+import { SlLogout } from "react-icons/sl";
 
 export interface LoggedUserInfoProps
 {
@@ -39,7 +40,11 @@ export function LoggedUserInfo( props: LoggedUserInfoProps)
                 <UserName>{userInfo.name}</UserName>
                 <UserTag>@{userInfo.username}</UserTag>
                 <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
-                {loading || <Logout onClick={logoutHandler}>Logout</Logout>}
+                {loading || 
+                    <Logout onClick={logoutHandler}>
+                        <SlLogout/>Logout
+                    </Logout>
+                }
             </Description>
         </Wrapper>
     );
@@ -76,10 +81,14 @@ const UserTag = styled.span`
 `;
 
 const Logout = styled.div`
-    margin-top: 2rem;
-    margin-left: -3rem;
+    margin-top: 0.5rem;
     cursor: pointer;
     font-size: smaller;
+
+    & svg {
+        vertical-align: text-top;
+        margin-right: 0.5rem;
+    }
 `
 const PulseLoaderStyled = styled(PulseLoader)`
     margin-top: 2rem;

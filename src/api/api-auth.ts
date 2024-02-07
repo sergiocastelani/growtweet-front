@@ -39,4 +39,9 @@ export class ApiAuth extends ApiConnection
 
         localStorage.setItem('user', JSON.stringify(user));
     }
+
+    static getLoggedUser() : UserAuthInfo | null
+    {
+        return JSON.parse(localStorage.getItem('user') ?? 'null');
+    }
 }

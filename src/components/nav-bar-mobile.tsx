@@ -1,21 +1,14 @@
 import styled from "styled-components";
 import { FaHashtag, FaHome, FaRegUser } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import { UserAuthInfo } from "../api/dto/auth-dtos";
 import { useNavigate } from "react-router-dom";
+import { SlLogin } from "react-icons/sl";
+import { ApiAuth } from "../api/api-auth";
 
 export function NavBarMobile()
 {
-//    const [showNewTweetForm, setShowNewTweetForm] = useState(false);
-    const [userInfo, setUserInfo] = useState<UserAuthInfo | null>(null);
+    const userInfo = ApiAuth.getLoggedUser();
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        const user = localStorage.getItem("user");
-        if(user)
-            setUserInfo(JSON.parse(user));
-    },[]);
 
     return (
         <Wrapper>
@@ -24,6 +17,10 @@ export function NavBarMobile()
             
             {userInfo &&
                 <Item onClick={() => navigate(`/profile/${userInfo?.id}`)}><FaRegUser/></Item>
+            }
+
+            {!!userInfo ||
+                <Item onClick={() => navigate('/login')}><SlLogin/></Item>
             }
         </Wrapper>
     );
