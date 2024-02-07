@@ -1,7 +1,5 @@
 import { styled } from "styled-components";
-import { NavBar } from "../../components/nav-bar";
 import { TweetList } from "../../components/tweet/tweet-list";
-import { News } from "../../components/news";
 import { useEffect, useState } from "react";
 import { TweetDisplayInfo } from "../../api/dto/tweet-dtos";
 import { ApiTweet } from "../../api/api-tweet";
@@ -33,38 +31,15 @@ export function ProfilePage()
     }, []);
 
     return (
-        <Wrapper>
-            <NavBar/>
-            <CentralWidget>
-                <Header>
-                    <Tittle>Profile</Tittle>
-                    <ProfileUserInfo userProfile={userProfile}/>
-                </Header>
-                <TweetList tweets={tweets} loading={tweets.length === 0}/>
-            </CentralWidget>
-            <News/>
-        </Wrapper>
+        <>
+            <Header>
+                <Tittle>Profile</Tittle>
+                <ProfileUserInfo userProfile={userProfile}/>
+            </Header>
+            <TweetList tweets={tweets} loading={tweets.length === 0}/>
+        </>
     )
 }
-
-const Wrapper = styled.div`
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    height: 100vh;
-    padding: 0;
-    margin: 0;
-    background-color: var(--color-bg-2);
-    color: var(--color-fg-2);
-`;
-
-const CentralWidget = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    width: 50%;
-    max-width: 600px;
-`;
 
 const Header = styled.header`
     display: flex;
