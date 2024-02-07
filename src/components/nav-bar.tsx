@@ -69,6 +69,10 @@ const Wrapper = styled.div`
     width: 13rem;
     padding: 1rem 1rem 0 10px;
     border: none;
+
+    @media (width <= 600px) {
+        display: none;
+    }
 `;
 
 const Logo = styled.img`
