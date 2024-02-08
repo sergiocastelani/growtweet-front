@@ -18,3 +18,14 @@ export interface UserDisplayInfo
 }
 
 export type UserDisplayInfoDTO = CommonResponse<UserDisplayInfo>;
+
+export interface UserUpdateRequest 
+{
+    username: string;
+    email: string;
+    name: string;
+    currentPassword: string;
+    newPassword?: string;
+    pictureUrl?: string;
+}
+

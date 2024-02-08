@@ -13,7 +13,7 @@ export class ApiAuth extends ApiConnection
     {
         return super.post('/auth/login', {email, password})
             .then((response: AxiosResponse<UserAuthInfoDTO, any>) => {
-                ApiAuth.setUserAsLoggedIn(response.data.data);
+                ApiAuth.setLoggedUser(response.data.data);
                 return response;
             });
     }
@@ -32,7 +32,7 @@ export class ApiAuth extends ApiConnection
         await super.get('/auth/check');
     }
 
-    static setUserAsLoggedIn(user: UserAuthInfo)
+    static setLoggedUser(user: UserAuthInfo)
     {
         if (user.pictureUrl?.trim().length === 0)
             user.pictureUrl = null;

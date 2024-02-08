@@ -7,16 +7,12 @@ import { useParams } from "react-router-dom";
 import { UserDisplayInfo } from "../../api/dto/user-dtos";
 import { ApiUser } from "../../api/api-user";
 import { ProfileUserInfo } from "./profile-user-info";
-import { SlLogout } from "react-icons/sl";
-import { ApiAuth } from "../../api/api-auth";
 
 export function ProfilePage()
 {
-    const [tweets, setTweets] = useState<TweetDisplayInfo[]>([]);
+    const [tweets, setTweets] = useState<TweetDisplayInfo[] | null>(null);
     const [userProfile, setUserProfile] = useState<UserDisplayInfo>();
     const { userId } = useParams();
-    const [loggingOut, setLoggingOut]= useState(false);
-    const loggedUser = ApiAuth.getLoggedUser();
 
     useEffect(() => {
         const userIdInt = parseInt(userId ?? '');
@@ -34,33 +30,15 @@ export function ProfilePage()
             });
     }, []);
 
-    const logoutHandler = () => {
-        if (loggingOut)
-            return;
-
-        setLoggingOut(true);
-
-        (new ApiAuth()).logout()
-            .finally(() => {
-                window.location.reload();
-                setLoggingOut(false)
-            });
-    }
-
     return (
         <>
             <Header>
                 <Tittle>
                     Profile
-                    {!loggingOut && loggedUser && loggedUser?.id == userProfile?.id &&
-                        <Logout onClick={logoutHandler}>
-                            <SlLogout/>Logout
-                        </Logout>
-                    }
                 </Tittle>
                 <ProfileUserInfo userProfile={userProfile}/>
             </Header>
-            <TweetList tweets={tweets} loading={tweets.length === 0}/>
+            <TweetList tweets={tweets ?? []} loading={tweets === null}/>
         </>
     )
 }

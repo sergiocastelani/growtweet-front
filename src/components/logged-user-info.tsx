@@ -1,10 +1,7 @@
 import { UserAuthInfo } from "../api/dto/auth-dtos";
 import { styled } from "styled-components";
 import emptyAvatar from '../assets/empty_avatar.png'
-import { ApiAuth } from "../api/api-auth";
-import { useState } from "react";
-import { PulseLoader } from "react-spinners";
-import { SlLogout } from "react-icons/sl";
+import { LogoutButton } from "./logout-button";
 
 export interface LoggedUserInfoProps
 {
@@ -15,20 +12,6 @@ export interface LoggedUserInfoProps
 export function LoggedUserInfo( props: LoggedUserInfoProps)
 {
     const { userInfo } = props;
-    const [loading, setLoading]= useState(false);
-
-    const logoutHandler = () => {
-        if (loading)
-            return;
-
-        setLoading(true);
-
-        (new ApiAuth()).logout()
-            .finally(() => {
-                window.location.reload();
-                setLoading(false)
-            });
-    }
 
     if (! userInfo)
         return <></>;
@@ -39,12 +22,7 @@ export function LoggedUserInfo( props: LoggedUserInfoProps)
             <Description>
                 <UserName>{userInfo.name}</UserName>
                 <UserTag>@{userInfo.username}</UserTag>
-                <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
-                {loading || 
-                    <Logout onClick={logoutHandler}>
-                        <SlLogout/>Logout
-                    </Logout>
-                }
+                <LogoutButton/>
             </Description>
         </Wrapper>
     );
@@ -78,19 +56,4 @@ const UserName = styled.span`
 const UserTag = styled.span`
     font-weight: 100;
     color: color-mix(in srgb, var(--color-fg-2) 30%, transparent);
-`;
-
-const Logout = styled.div`
-    margin-top: 0.5rem;
-    cursor: pointer;
-    font-size: smaller;
-
-    & svg {
-        vertical-align: text-top;
-        margin-right: 0.5rem;
-    }
-`
-const PulseLoaderStyled = styled(PulseLoader)`
-    margin-top: 2rem;
-    margin-left: -3rem;
 `;

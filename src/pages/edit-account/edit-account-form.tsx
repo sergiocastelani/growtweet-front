@@ -1,23 +1,37 @@
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
-import { UserRegistration } from "../../api/dto/user-dtos";
+import { UserUpdateRequest } from "../../api/dto/user-dtos";
 import { ApiUser } from "../../api/api-user";
 import { isAxiosError } from "axios";
+import { ApiAuth } from "../../api/api-auth";
 import { PulseLoader } from "react-spinners";
 import { useState } from "react";
 
-export interface NewAccountFormProps 
+export interface EditAccountFormProps 
 {
     onSuccess?: () => void;
 }
 
-export function NewAccountForm(props: NewAccountFormProps)
+export function EditAccountForm(props: EditAccountFormProps)
 {
     const [loading, setLoading] = useState(false);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<UserRegistration>();
+    const { register, handleSubmit, getValues, formState: { errors } } = useForm<UserUpdateFormData>({
+        defaultValues: async () => {
+            const user = ApiAuth.getLoggedUser();
+            return {
+                username: user?.username ?? "",
+                email: user?.email ?? "",
+                name: user?.name ?? "",
+                currentPassword: "",
+                newPassword: "",
+                newPasswordConfirm: "",
+                pictureUrl: user?.pictureUrl ?? "",
+            };
+        }
+    });
 
-    const onSubmit = async (formData: UserRegistration) => 
+    const onSubmit = async (formData: UserUpdateFormData) => 
     {
         if (loading)
             return;
@@ -25,7 +39,12 @@ export function NewAccountForm(props: NewAccountFormProps)
         try 
         {
             setLoading(true);
-            await (new ApiUser()).create(formData);
+
+            if (formData.newPassword !== undefined && formData.newPassword.length === 0)
+                formData.newPassword = undefined;
+
+            await (new ApiUser()).update(formData);
+
             props.onSuccess?.();
         } 
         catch (error) 
@@ -82,22 +101,38 @@ export function NewAccountForm(props: NewAccountFormProps)
                 <ErrorMessage>{errors.name.message?.toString()}</ErrorMessage>
             }
 
-            <label htmlFor="password">Password:</label>
-            <Input type="password" {
-                ...register("password", 
-                {
-                    required: "Password name can't be empty", 
-                })} 
-            />
-            {errors.password && 
-                <ErrorMessage>{errors.password.message?.toString()}</ErrorMessage>
-            }
-
             <label htmlFor="pictureUrl">Picture URL:</label>
             <Input { ...register("pictureUrl") } />
 
+            <label htmlFor="currentPassword">Current password:</label>
+            <Input type="password" {
+                ...register("currentPassword", 
+                {
+                    required: "Current password can't be empty", 
+                })} 
+            />
+            {errors.currentPassword && 
+                <ErrorMessage>{errors.currentPassword.message?.toString()}</ErrorMessage>
+            }
+
+            <label htmlFor="newPassword">New password (optional):</label>
+            <Input type="password" { ...register("newPassword")} />
+
+            <label htmlFor="newPasswordConfirm">New password confirmation:</label>
+            <Input type="password" {
+                ...register(
+                    "newPasswordConfirm", 
+                    {
+                        validate: (value) => value === getValues('newPassword') || "Password confirmation doesn't match" ,
+                    }
+                )
+            }/>
+            {errors.newPasswordConfirm && 
+                <ErrorMessage>{errors.newPasswordConfirm.message?.toString()}</ErrorMessage>
+            }
+
             <Button type="submit" disabled={loading}>
-                {loading || 'Create'}
+                {loading || 'Update'}
                 <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
             </Button>
         </Form>
@@ -140,3 +175,7 @@ const Button = styled.button`
 const PulseLoaderStyled = styled(PulseLoader)`
     margin-top: 2px;
 `;
+
+interface UserUpdateFormData extends UserUpdateRequest {
+    newPasswordConfirm: string;
+}

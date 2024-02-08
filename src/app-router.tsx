@@ -6,6 +6,7 @@ import { ExplorePage } from "./pages/explore-page";
 import { NewAccountPage } from "./pages/new-account/new-account-page";
 import { RepliesPage } from "./pages/replies-page";
 import { MainTemplatePage } from "./pages/main-template-page";
+import { EditAccountPage } from "./pages/edit-account/edit-account-page";
 
 export const appRouter = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ export const appRouter = createBrowserRouter([
                 element: <RepliesPage />,
             },
         ]
+    },
+    {
+        path: "/edit-profile",
+        element: <EditAccountPage />,
     },
     {
         path: "/login",
