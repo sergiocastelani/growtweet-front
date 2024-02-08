@@ -57,14 +57,3 @@ const Tittle = styled.header`
     font-size: 1.2rem;
     font-weight: bold;
 `
-const Logout = styled.div`
-    display: inline;
-    margin-left: 2rem;
-    cursor: pointer;
-    font-size: 0.8rem;
-
-    & svg {
-        vertical-align: text-top;
-        margin-right: 0.5rem;
-    }
-`

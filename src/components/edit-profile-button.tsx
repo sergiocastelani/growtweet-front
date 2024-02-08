@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { ApiAuth } from "../api/api-auth";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
 import { VscEdit } from "react-icons/vsc";
