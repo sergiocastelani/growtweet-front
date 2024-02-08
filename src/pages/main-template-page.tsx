@@ -27,8 +27,8 @@ const VBox = styled.div`
     justify-content: start;
     width: 100vw;
     max-width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100dvh;
+    max-height: 100dvh;
     overflow: hidden;
     padding: 0;
     margin: 0;
