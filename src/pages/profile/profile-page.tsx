@@ -19,6 +19,8 @@ export function ProfilePage()
         if(isNaN(userIdInt))
             return;
 
+        setTweets(null);
+        
         (new ApiTweet()).fromUserId(userIdInt)
             .then((response) => {
                 setTweets(response.data.data);
@@ -28,7 +30,7 @@ export function ProfilePage()
             .then((response) => {
                 setUserProfile(response.data.data);
             });
-    }, []);
+    }, [userId]);
 
     return (
         <>
