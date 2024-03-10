@@ -10,7 +10,7 @@ export function NewAccountPage()
         <Wrapper>
             <MainPanel>
                 <h1>Create your account</h1>
-                <NewAccountForm onSuccess={()=> navigate('/')}/>
+                <NewAccountForm onSuccess={()=> navigate('/login')}/>
             </MainPanel>
         </Wrapper>
     )

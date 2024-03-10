@@ -5,6 +5,7 @@ import { ApiUser } from "../../api/api-user";
 import { isAxiosError } from "axios";
 import { PulseLoader } from "react-spinners";
 import { useState } from "react";
+import { ApiAuth } from "../../api/api-auth";
 
 export interface NewAccountFormProps 
 {
@@ -26,6 +27,7 @@ export function NewAccountForm(props: NewAccountFormProps)
         {
             setLoading(true);
             await (new ApiUser()).create(formData);
+            ApiAuth.unlogUser();
             props.onSuccess?.();
         } 
         catch (error) 
