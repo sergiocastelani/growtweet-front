@@ -2,8 +2,7 @@ import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
 import { UserDisplayInfoDTO, UserRegistration, UserUpdateRequest } from "./dto/user-dtos";
 import { ApiAuth } from "./api-auth";
-import { UserAuthInfo, UserAuthInfoDTO } from "./dto/auth-dtos";
-import { CommonResponse } from "./dto/common-response";
+import { AuthTokenDTO, UserAuthInfo, UserAuthInfoDTO } from "./dto/auth-dtos";
 
 export class ApiUser extends ApiConnection 
 {
@@ -20,17 +19,18 @@ export class ApiUser extends ApiConnection
     async create(user: UserRegistration) : Promise<UserAuthInfo>
     {
         return super.post(`/user`, user)
-            .then((response: AxiosResponse<CommonResponse<UserAuthInfo>>) => {
+            .then((response: AxiosResponse<UserAuthInfoDTO>) => 
+            {
                 return response.data.data;
             });
     }
 
-    async update(user: UserUpdateRequest) : Promise<AxiosResponse<UserAuthInfoDTO,any>>
+    async update(user: UserUpdateRequest) : Promise<UserAuthInfo>
     {
         return super.put(`/user`, user)
-            .then((response) => {
-                ApiAuth.setLoggedUser(response.data.data);
-                return response;
+            .then((response: AxiosResponse<AuthTokenDTO>) => 
+            {
+                return ApiAuth.setLoggedUser(response.data.data);
             });
     }
 }
