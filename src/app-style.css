@@ -16,6 +16,10 @@
     --color-bg-danger-2: rgb(190, 0, 0);
     --color-fg-danger-2: rgb(255, 255, 255);
 
+    --color-info-1: rgb(16 121 242);
+    --color-bg-info-1: rgb(16 121 242);
+    --color-fg-info-1: rgb(255, 255, 255);
+
     --color-bg-1: var( --color-1 );
     --color-fg-1: var( --color-2 );
 
