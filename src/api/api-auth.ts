@@ -13,7 +13,7 @@ export class ApiAuth extends ApiConnection
     async login(email: string, password: string) : Promise<UserAuthInfo>
     {
         return super.post('/auth/login', {email, password})
-            .then((response: AxiosResponse<AuthTokenDTO, any>) => 
+            .then((response: AxiosResponse<AuthTokenDTO>) => 
             {
                 return ApiAuth.setLoggedUser(response.data.data);
             });
@@ -27,6 +27,11 @@ export class ApiAuth extends ApiConnection
     async check()
     {
         await super.get('/auth/check');
+    }
+
+    async ping()
+    {
+        await super.get('/auth/ping');
     }
 
     static setLoggedUser(token: string) : UserAuthInfo
