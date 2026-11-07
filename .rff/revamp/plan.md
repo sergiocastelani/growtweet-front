@@ -445,4 +445,3 @@ graph LR
 - **Empty feed:** no new empty state (RFF assumption); whatever renders today is kept, restyled.
 - **Skeleton colors (confirmed):** `react-content-loader` cannot consume CSS variables in SVG attributes; S08 and S10 read the token values at runtime through `readThemeColor` (S02).
 - **Icon library (confirmed):** `react-icons` is upgraded to `^5.7.0` in S01 and all steps use the current Lucide names (`LuHouse`, `LuSquarePlus`, `LuCircleCheck`, `LuCircleAlert`, ...). Every icon imported today still exists in 5.7.0, so the upgrade does not break the build before the area slices land.
-- **Plan location:** written next to the RFF at `.rff/revamp/plan.md` (the RFF's chosen folder) instead of `.rff/plan.md`; pass this path to `rff-steps`.
