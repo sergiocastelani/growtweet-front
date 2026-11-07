@@ -1,12 +1,12 @@
 ---
 name: rff-implement
-description: Implement the step design files ".rff/step-NN.md" (written by rff-steps) one step at a time, each through an implementation-review loop run by two separate agents. The implementer and the reviewer both start with a clean context when the step starts and keep it through every round of that step; the next step gets a new pair. The implementer may deviate from the step's implementation suggestions, but must leave every test the step defines existing and passing. The reviewer works at high effort and focuses on regressions. Use when the user wants to implement, build, code or execute the steps of a feature request, or names a step file to implement.
-argument-hint: "[step file paths or ids, e.g. .rff/step-03.md or S02,S05 | empty for all steps in .rff/]"
+description: Implement the step design files ".rff/<feature-name>/step-NN.md" (written by rff-steps) one step at a time, each through an implementation-review loop run by two separate agents. The implementer and the reviewer both start with a clean context when the step starts and keep it through every round of that step; the next step gets a new pair. The implementer may deviate from the step's implementation suggestions, but must leave every test the step defines existing and passing. The reviewer works at high effort and focuses on regressions. Use when the user wants to implement, build, code or execute the steps of a feature request, or names a step file to implement.
+argument-hint: "[feature name] [step file paths or ids, e.g. .rff/<feature-name>/step-03.md or S02,S05 | empty for all steps of the feature]"
 ---
 
 # rff-implement
 
-Implement the step files in `.rff/` (`.rff/step-01.md`, `.rff/step-02.md`, ...), **one step at a time**:
+Implement the step files in `<feature-dir>/` (`<feature-dir>/step-01.md`, `<feature-dir>/step-02.md`, ...), **one step at a time**:
 
 1. Each step is implemented by a **new implementer agent** with a clean context.
 2. The result is reviewed by a **new reviewer agent**, a different agent, also with a clean context, working at **high effort** and focused on **regressions**.
@@ -17,19 +17,29 @@ Implement the step files in `.rff/` (`.rff/step-01.md`, `.rff/step-02.md`, ...),
 
 You are the orchestrator. Keep your own context light: you do not write code, review code or run the step's tests yourself. The implementation rules live in `implement.md` and the review rules in `review.md`, next to this `SKILL.md` (in this skill's base directory).
 
+## 0. Pick the feature folder
+
+Every file of an rff request lives in a folder exclusive to that request: `<project-root>/.rff/<feature-name>/` (the **feature folder**, written `<feature-dir>` in this skill and in `implement.md` / `review.md`). `<project-root>` is the git top level (`git rev-parse --show-toplevel`); without a git repository, it is the working directory, or the parent of `.rff/` when the working directory is inside a `.rff/` folder.
+
+1. **Already defined**: if `$ARGUMENTS` names the feature (a word that is not a step id: a feature name, or a path inside `.rff/<feature-name>/`, such as a step file path), or a feature folder was already settled earlier in this session (by `rff-create` or another rff skill), use it without asking.
+2. **Otherwise ask** with `AskUserQuestion` which feature to work with. List the existing folders in `<project-root>/.rff/`. The first option, suffixed "(Recommended)", is the **current folder**: the feature folder the working directory is in (`.rff/<name>/` or below it); when the working directory is not inside one, recommend the most recently modified feature folder instead. Add up to three other existing feature folders as options; the user can type another name with "Other".
+3. If the chosen folder does not exist, tell the user and stop.
+
+Every rff file this skill and its agents use or generate (the step files, the plan, the contract, the implementation log) is in the feature folder; never read rff files from, or write them to, anywhere else (other feature folders included). Every agent brief includes the feature folder's absolute path. Source code changes go to the project as usual.
+
 ## 1. Find the steps
 
 1. **Pick the step files.**
-   - If `$ARGUMENTS` names step files (paths) or step ids (`S03`, `S02,S05`, `S04-S07`; `S03` → `.rff/step-03.md`), use only those. If one does not exist, tell the user and stop.
-   - Otherwise use every `.rff/step-*.md` file.
-   - If no step file is found, tell the user to run `rff-steps` first, and stop.
-2. **Order them.** If `.rff/plan.md` exists, order by its execution stages, then by step id, so each step comes after the steps it depends on. Otherwise order by step number.
-3. **Check design status.** If `.rff/design-contract.md` exists and a selected step is not `approved` there, warn the user and ask with `AskUserQuestion` whether to implement it anyway or skip it.
+   - If `$ARGUMENTS` names step files (paths inside the feature folder) or step ids (`S03`, `S02,S05`, `S04-S07`; `S03` → `<feature-dir>/step-03.md`), use only those. If one does not exist, tell the user and stop.
+   - Otherwise use every `<feature-dir>/step-*.md` file.
+   - If no step file is found, tell the user to run `rff-steps` for this feature first, and stop.
+2. **Order them.** If `<feature-dir>/plan.md` exists, order by its execution stages, then by step id, so each step comes after the steps it depends on. Otherwise order by step number.
+3. **Check design status.** If `<feature-dir>/design-contract.md` exists and a selected step is not `approved` there, warn the user and ask with `AskUserQuestion` whether to implement it anyway or skip it.
 4. **Resume.** Read the implementation log (section 2). Steps marked `done` are skipped unless the user named them in `$ARGUMENTS`; if a named step is already `done`, ask whether to re-implement it or skip it.
 
 ## 2. Implementation log and checkpoints
 
-The log, `.rff/implementation-log.md`, is the memory shared across steps and runs. Create it if missing:
+The log, `<feature-dir>/implementation-log.md`, is the memory shared across steps and runs. Create it if missing:
 
 ```markdown
 # Implementation Log
@@ -67,8 +77,8 @@ Set the step's status to `in-progress` in the log.
 
 Start a **new** implementer with the Agent tool (`subagent_type: general-purpose`; never `fork`, which would carry this conversation; never an agent from an earlier step). Brief it with:
 
-- The step id and title.
-- Absolute paths to: `implement.md` (in this skill's base directory), the step file, `.rff/design-contract.md` (when it exists), and `.rff/implementation-log.md`. Nothing else: no `.rff/plan.md`, no source feature request, no other step files. The agent also reads `CLAUDE.md` and the other global project instruction files on its own.
+- The step id and title, and the absolute path of the feature folder.
+- Absolute paths to: `implement.md` (in this skill's base directory), the step file, `<feature-dir>/design-contract.md` (when it exists), and `<feature-dir>/implementation-log.md`. Nothing else: no `<feature-dir>/plan.md`, no source feature request, no other step files. The agent also reads `CLAUDE.md` and the other global project instruction files on its own.
 - The checkpoint the step starts from, and the git rules above.
 - The instruction: "Follow `implement.md` exactly. Implement only this step. You may deviate from the step file's implementation suggestions, but when you finish, every test and check the step file defines must exist and pass. Report back in the format at the end of `implement.md`. You will receive the reviewer's findings and must fix them until the step passes review."
 
@@ -82,8 +92,8 @@ The step is reviewed by a reviewer agent, never by you and never by the implemen
 
 **First review of the step.** Start a **new** reviewer with the Agent tool (`subagent_type: general-purpose`, `effort: "high"`; never `fork`, and never a reviewer from an earlier step). Brief it with:
 
-- The step id and title, and the checkpoint the step started from (so it can diff the step's changes).
-- Absolute paths to: `review.md` (in this skill's base directory), the step file, `.rff/design-contract.md` (when it exists), and `.rff/implementation-log.md`. Nothing else: no `.rff/plan.md`, no source feature request, and no step files of earlier steps. Regressions are checked from the diff, treating every existing behavior the step file does not mention as already well established.
+- The step id and title, the absolute path of the feature folder, and the checkpoint the step started from (so it can diff the step's changes).
+- Absolute paths to: `review.md` (in this skill's base directory), the step file, `<feature-dir>/design-contract.md` (when it exists), and `<feature-dir>/implementation-log.md`. Nothing else: no `<feature-dir>/plan.md`, no source feature request, and no step files of earlier steps. Regressions are checked from the diff, treating every existing behavior the step file does not mention as already well established.
 - The implementer's **Deviations** and **Test results** sections, verbatim, so it can check them. Nothing else from the implementer's report.
 - The instruction: "Follow `review.md` exactly. Focus on regressions. Do not edit, stage or commit any file. Report back in the format at the end of `review.md`. You will be asked to re-review after each fix until the step passes."
 
@@ -134,6 +144,6 @@ When every selected step is `done` or `skipped`, or the run was stopped:
 - Implementer and reviewer are always different agents. Both start with a clean context at the start of a step's loop and keep it until that loop is over; they are never reused for another step. You never implement or review a step yourself.
 - The reviewer always runs with `effort: "high"`.
 - The step file's tests and checks are the bar: a step is done only when they all exist and pass (agent-verified, or confirmed by the user for `needs-human` checks), and existing behavior the step does not mention is unchanged.
-- Keep both agents' context minimal: the step file, global project instructions (`CLAUDE.md` and similar), the workflow control files (`implement.md` / `review.md`, `.rff/design-contract.md`) and the log (`.rff/implementation-log.md`), plus the code itself. Never brief them with the plan or other step files.
+- Keep both agents' context minimal: the step file, global project instructions (`CLAUDE.md` and similar), the workflow control files (`implement.md` / `review.md`, `<feature-dir>/design-contract.md`) and the log (`<feature-dir>/implementation-log.md`), plus the code itself. Never brief them with the plan or other step files.
 - Forward findings and user feedback faithfully; do not reinterpret them.
 - Write in the same language as the step files.

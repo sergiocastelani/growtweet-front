@@ -1,20 +1,26 @@
 ---
 name: rff-plan
-description: Break a "request for feature" spec (e.g. request-for-feature.md written by rff-create) into vertical, testable implementation steps and write them to ".rff/plan.md". Each step lists its purpose, the software layers it touches, the files on each layer and the shared items it needs and provides, and is self-sufficient so it can be designed in isolation (one owner per shared item, no reliance on other steps' work); steps are then ordered by dependency into stages whose steps can run in parallel. Use when the user wants to plan, slice, break down or sequence the implementation of a feature request.
-argument-hint: "[path to request-for-feature file]"
+description: Break a "request for feature" spec (e.g. request-for-feature.md written by rff-create) into vertical, testable implementation steps and write them to ".rff/<feature-name>/plan.md". Each step lists its purpose, the software layers it touches, the files on each layer and the shared items it needs and provides, and is self-sufficient so it can be designed in isolation (one owner per shared item, no reliance on other steps' work); steps are then ordered by dependency into stages whose steps can run in parallel. Use when the user wants to plan, slice, break down or sequence the implementation of a feature request.
+argument-hint: "[feature name | path inside .rff/<feature-name>/]"
 ---
 
 # rff-plan
 
-Turn a request-for-feature (RFF) file into an implementation plan made of vertical slices, grouped into stages that can be executed in parallel. Output: `.rff/plan.md`.
+Turn a request-for-feature (RFF) file into an implementation plan made of vertical slices, grouped into stages that can be executed in parallel. Output: `<feature-dir>/plan.md`.
+
+## 0. Pick the feature folder
+
+Every file of an rff request lives in a folder exclusive to that request: `<project-root>/.rff/<feature-name>/` (the **feature folder**, written `<feature-dir>` in this skill). `<project-root>` is the git top level (`git rev-parse --show-toplevel`); without a git repository, it is the working directory, or the parent of `.rff/` when the working directory is inside a `.rff/` folder.
+
+1. **Already defined**: if `$ARGUMENTS` names the feature (a feature name, or a path inside `.rff/<feature-name>/`), or a feature folder was already settled earlier in this session (by `rff-create` or another rff skill), use it without asking.
+2. **Otherwise ask** with `AskUserQuestion` which feature to work with. List the existing folders in `<project-root>/.rff/`. The first option, suffixed "(Recommended)", is the **current folder**: the feature folder the working directory is in (`.rff/<name>/` or below it); when the working directory is not inside one, recommend the most recently modified feature folder instead. Add up to three other existing feature folders as options; the user can type another name with "Other".
+3. If `.rff/` has no feature folder, or the chosen folder does not exist, tell the user to run `rff-create` first, and stop.
+
+All files this skill reads and writes for the request are in the feature folder: never read rff files from, or write them to, anywhere else (other feature folders included).
 
 ## 1. Load the request for feature
 
-Find the RFF file, in this order:
-
-1. **Argument given** (`$ARGUMENTS`): use that path.
-2. **No argument**: look for `request-for-feature*.md` in the working directory, then in `docs/`, `.rff/` and other spec folders. If several match, ask the user which one with `AskUserQuestion`.
-3. **Nothing found**: ask the user for the path.
+The RFF is `<feature-dir>/request-for-feature.md`. If it is missing, use the only `request-for-feature*.md` in the feature folder, ask with `AskUserQuestion` when there are several, and if there is none tell the user to run `rff-create` (or to put the request in that folder), and stop.
 
 Read the whole file. Extract and keep at hand:
 - the functional requirements (FR-xx), acceptance criteria, data model, UI/UX and integration notes;
@@ -25,7 +31,7 @@ If the RFF has no numbered requirements, number them yourself (R-01, R-02, ...) 
 
 ## 2. Map the codebase into layers
 
-The plan must name real files, so explore the target codebase first (the working directory, or the project the RFF names). Identify:
+The plan must name real files, so explore the target codebase first (`<project-root>`, or the project the RFF names). Identify:
 
 - **Tech stack and conventions**: languages, frameworks, folder structure, naming, how tests are written and run (or that there are none).
 - **The layers that exist**, using the project's own terms. Typical layers, keep only those that apply:
@@ -112,9 +118,9 @@ Use repo-relative paths in backticks. Mark each file as `new`, `modify` or `dele
 5. Check the result: no cycles; the critical path (longest chain) is as short as reasonable. If a stage holds a single large step that blocks everything, try to split it.
 6. Check self-sufficiency (section 3): every shared item has exactly one owner; no step's text refers to another step's work; no step needs another step to meet its own requirements or tests; no step changes an item it does not own beyond what the owner's **Provides** allows. Fix the steps until every check passes, so `rff-steps` can design each one without conflicts.
 
-## 5. Write `.rff/plan.md`
+## 5. Write `<feature-dir>/plan.md`
 
-Write the file in a `.rff/` folder at the root of the project the RFF targets (create the folder if needed). If the file already exists, ask the user with `AskUserQuestion` whether to overwrite it or save as `.rff/plan-<short-slug>.md`.
+Write the file in the feature folder. If `<feature-dir>/plan.md` already exists, ask the user with `AskUserQuestion` whether to overwrite it or save as `<feature-dir>/plan-<short-slug>.md`.
 
 Structure:
 

@@ -1,12 +1,16 @@
 ---
 name: rff-create
-description: Turn a rough feature concept into a complete "request-for-feature.md" spec through a Q&A session. Use when the user says "grill me", wants to refine or flesh out a feature idea, or wants a feature request/spec written from a report file or from ideas discussed in the current session. Asks targeted questions with options, then writes the final markdown file where the user chooses.
+description: Turn a rough feature concept into a complete "request-for-feature.md" spec through a Q&A session. Use when the user says "grill me", wants to refine or flesh out a feature idea, or wants a feature request/spec written from a report file or from ideas discussed in the current session. Asks the user for a feature name, creates the feature folder ".rff/<feature-name>/" at the project root, asks targeted questions with options, then writes the final markdown file into that folder.
 argument-hint: "[path to report file | short description of the idea]"
 ---
 
 # rff-create
 
-Interview the user about a feature concept until it is clear enough to implement, then write `request-for-feature.md`.
+Interview the user about a feature concept until it is clear enough to implement, then write `request-for-feature.md` into the feature's own folder.
+
+## Feature folder
+
+Every file of an rff request lives in a folder exclusive to that request: `<project-root>/.rff/<feature-name>/` (the **feature folder**, `<feature-dir>` below). `<project-root>` is the git top level (`git rev-parse --show-toplevel`); without a git repository, it is the working directory, or the parent of `.rff/` when the working directory is inside a `.rff/` folder. The other rff skills (`rff-plan`, `rff-steps`, `rff-implement`) read and write only inside this folder.
 
 ## 1. Gather the concept
 
@@ -16,11 +20,18 @@ Find the source of the idea, in this order:
 2. **Current session**: if no argument, look back through this conversation for the feature idea being discussed.
 3. **Nothing found**: ask the user to describe the idea or point to a report file.
 
-If the idea targets a codebase that is available (the working directory or a path the user names), explore the relevant parts briefly (structure, conventions, related features, tech stack) so questions are grounded in what exists and options fit the current architecture. Do not ask things the code already answers.
+If the idea targets a codebase that is available (`<project-root>` or a path the user names), explore the relevant parts briefly (structure, conventions, related features, tech stack) so questions are grounded in what exists and options fit the current architecture. Do not ask things the code already answers.
 
 Then give the user a short summary (3 to 6 bullets) of your understanding of the concept, so misunderstandings surface early.
 
-## 2. Build the list of open points
+## 2. Name the feature and prepare its folder
+
+1. Ask the user for the feature name with `AskUserQuestion`: offer 2 or 3 short names derived from the concept (your recommendation first, suffixed "(Recommended)"); the user can type their own with "Other".
+2. Normalize the name into a folder name: lowercase, words separated by single hyphens, only `a-z`, `0-9` and `-` (strip accents, turn spaces, underscores and other separators into hyphens, drop other characters, trim leading and trailing hyphens). Example: "New Feature" → `new-feature`. Tell the user the resulting folder name.
+3. If `<project-root>/.rff/<feature-name>/` already exists, ask with `AskUserQuestion` whether to **use the existing folder** (its files stay; an existing `request-for-feature.md` is handled in section 5) or **pick another name** (back to step 1).
+4. Create the folder (and `.rff/` itself, if missing). From here on it is the feature folder for the rest of the session: the other rff skills use it without asking again.
+
+## 3. Build the list of open points
 
 Identify what is unclear, missing, ambiguous or contradictory. Check these areas and keep only the ones that matter for this feature:
 
@@ -36,7 +47,7 @@ Identify what is unclear, missing, ambiguous or contradictory. Check these areas
 
 Prioritize: questions whose answers change many other decisions come first.
 
-## 3. Grill: the Q&A loop
+## 4. Grill: the Q&A loop
 
 Use the `AskUserQuestion` tool for every question round.
 
@@ -45,7 +56,7 @@ Use the `AskUserQuestion` tool for every question round.
 - Use `multiSelect: true` when choices are not mutually exclusive (e.g. which platforms, which fields).
 - Make each question self-contained: the user may only see the dialog.
 - After each round:
-  - Record the decisions (keep a running decision log in your head or in a scratch file).
+  - Record the decisions (keep a running decision log in your head, or in a scratch file inside the feature folder that you delete once the spec is written).
   - Re-evaluate: answers often resolve, remove, or spawn other open points. Ask follow-ups when an answer is vague or creates a new ambiguity. Challenge contradictions with earlier answers.
 - Every 2 or 3 rounds, briefly state what is now settled and roughly how many open points remain.
 
@@ -53,16 +64,9 @@ Use the `AskUserQuestion` tool for every question round.
 - All points that would block implementation are settled. Then ask one confirmation question ("Ready to write the spec?") with options like "Write it now" and "Keep refining".
 - The user says they are done (e.g. "done", "that's enough", "write it"). Stop immediately; any unresolved points go into the "Open questions" section of the spec, together with your recommended default.
 
-## 4. Choose the output location
+## 5. Write `<feature-dir>/request-for-feature.md`
 
-Ask the user where to save `request-for-feature.md` using `AskUserQuestion`. Offer sensible options, such as:
-- the current working directory (root of the project)
-- a `docs/` folder in the project (or an existing docs/specs folder if one exists)
-- next to the source report file, if there was one
-
-If a file with that name already exists at the chosen location, ask whether to overwrite it, or save with a suffix (e.g. `request-for-feature-<short-slug>.md`).
-
-## 5. Write `request-for-feature.md`
+The file always goes in the feature folder: `<feature-dir>/request-for-feature.md`. If it already exists there, ask with `AskUserQuestion` whether to overwrite it or stop (the user can then run again with another feature name).
 
 Write it so a developer (or an agent) who never saw this conversation can implement the feature. Be concrete; use the user's decisions, not your guesses. Mark any assumption you made as an assumption. Omit sections that genuinely do not apply.
 
@@ -120,7 +124,7 @@ Things discussed but deferred to later iterations. (Omit if none.)
 
 ## 6. Finish
 
-Tell the user the file path (as a clickable markdown link), give a 2 or 3 line summary of the spec, and list any open questions that remain.
+Tell the user the feature folder and the file path (as a clickable markdown link), give a 2 or 3 line summary of the spec, and list any open questions that remain. Mention that `rff-plan` is the next step and works in the same folder.
 
 ## Guidelines
 

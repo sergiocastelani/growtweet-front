@@ -1,6 +1,8 @@
 # Implementation rules (rff-implement)
 
-You are implementing **one** step file, `.rff/step-NN.md`. You start with a clean context and keep it for every round of this step, until the reviewer passes it. A separate reviewer will check your work, with a strong focus on regressions.
+You are implementing **one** step file, `<feature-dir>/step-NN.md`. You start with a clean context and keep it for every round of this step, until the reviewer passes it. A separate reviewer will check your work, with a strong focus on regressions.
+
+`<feature-dir>` is the feature folder given in your brief (`<project-root>/.rff/<feature-name>/`). The rff files you use (step file, contract, log) are in that folder.
 
 ## 0. Binding rules
 
@@ -8,19 +10,19 @@ You are implementing **one** step file, `.rff/step-NN.md`. You start with a clea
 - **Suggestions are not orders.** The step file's structure, names of private items, skeletons and "Implementation order" are suggestions. You may deviate when you find a better or necessary way (the code differs from what the file assumed, a simpler design meets the same requirements, a suggestion has a bug). Every deviation must be reported (section 4).
 - **What you may not deviate from:**
   - The step's goal, requirements and acceptance criteria.
-  - Shared items (names listed under **Prerequisites** and **Creates**, and names in `.rff/design-contract.md`): keep them exactly, because other steps rely on them.
+  - Shared items (names listed under **Prerequisites** and **Creates**, and names in `<feature-dir>/design-contract.md`): keep them exactly, because other steps rely on them.
   - **Tests.** When you finish, every test and check the step file defines (its "Tests" section: automated, manual, static) must exist and pass. You may add tests; you may not drop, weaken or rewrite a defined test so it passes. If a defined test is wrong or impossible, that is a block (below), not something to work around.
 - **Git.** Never commit, stage, stash, reset, or switch branches. The orchestrator checkpoints the step.
 - **Blocked.** If the step cannot be finished inside its own scope (it needs a change owned by another step, a prerequisite is missing or different, a defined test contradicts the step's own requirements or cannot be made to pass), stop and report status `blocked`. Do not work around it.
 
 ## 1. Read
 
-Your documentation context is limited to these files. Do not open any other `.rff/` file: not `.rff/plan.md`, not the source feature request, not the step files of other steps (done or not). The step file is self-sufficient; anything it does not mention is already established behavior to preserve.
+Your documentation context is limited to these files. Do not open any other rff file, in `<feature-dir>/` or in any other folder under `.rff/`: not `<feature-dir>/plan.md`, not the source feature request, not the step files of other steps (done or not). The step file is self-sufficient; anything it does not mention is already established behavior to preserve.
 
 - The step file, in full.
 - `CLAUDE.md` and the other global project instruction files (for example `.claude/CLAUDE.md`, `CLAUDE.local.md`), for conventions.
-- The workflow control files: this `implement.md`, and `.rff/design-contract.md` when it exists (shared names and who owns them).
-- The log: `.rff/implementation-log.md` (what is already done, and earlier deviations).
+- The workflow control files: this `implement.md`, and `<feature-dir>/design-contract.md` when it exists (shared names and who owns them).
+- The log: `<feature-dir>/implementation-log.md` (what is already done, and earlier deviations).
 - Every code file the step touches, in full, before changing it, and any other code you need to understand what uses the code you change.
 
 ## 2. Implement

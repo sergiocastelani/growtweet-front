@@ -1,6 +1,8 @@
 # Step design rules (rff-steps)
 
-You are detailing **one** step of an implementation plan into `.rff/step-NN.md`. Design only: do not implement anything and do not edit any file other than your step file.
+You are detailing **one** step of an implementation plan into `<feature-dir>/step-NN.md`. Design only: do not implement anything and do not edit any file other than your step file.
+
+`<feature-dir>` is the feature folder given in your brief (`<project-root>/.rff/<feature-name>/`). Every rff file you read or write (plan, RFF, contract, step files) is in that folder; never read rff files from any other folder (other feature folders included).
 
 A developer (or an agent) must be able to implement the step from this file alone, without guessing names, signatures or behavior.
 
@@ -14,9 +16,9 @@ A developer (or an agent) must be able to implement the step from this file alon
 
 ## 1. Read what you need, nothing more
 
-- The step's section in the plan (`.rff/plan.md`), plus the plan's overview, software layers and assumptions.
+- The step's section in the plan (`<feature-dir>/plan.md`), plus the plan's overview, software layers and assumptions.
 - The parts of the source RFF this step covers: requirements, acceptance criteria, data model, UI/UX notes, non-goals, open-question defaults.
-- `.rff/design-contract.md`: shared names and who creates them. Treat it as binding.
+- `<feature-dir>/design-contract.md`: shared names and who creates them. Treat it as binding.
 - The approved step files of the steps this step depends on (listed in the brief). Do not read other step files unless the brief says so.
 - `CLAUDE.md` and other project docs for conventions.
 
@@ -91,7 +93,7 @@ Apply them where they fit the stack; do not force patterns a small project does 
 
 ## 4. Write the step file
 
-Write `.rff/step-NN.md` (from the step id: `S01` → `step-01.md`) with this template. Omit any section that does not apply (for example "Data" for a static site, or "Logic flows" when there is no non-trivial logic). Write in the same language as the plan.
+Write `<feature-dir>/step-NN.md` (from the step id: `S01` → `step-01.md`) with this template. Omit any section that does not apply (for example "Data" for a static site, or "Logic flows" when there is no non-trivial logic). Write in the same language as the plan.
 
 ````markdown
 # S03 - <Step title from the plan>

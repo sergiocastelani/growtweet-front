@@ -1,12 +1,12 @@
 ---
 name: rff-steps
-description: Turn each step of ".rff/plan.md" (written by rff-plan) into a deep, implementation-ready design file ".rff/step-NN.md", one step at a time. Each step is designed by a new agent and reviewed by a separate new agent, both starting with a clean context when the step starts and keeping it through every review round of that step, then reviewed with the user until approved, and only then does the next step start. Each file specifies the structure to build or change (files, classes, interfaces, enums, methods, attributes, or the stack's equivalents such as HTML sections, CSS classes and JS functions), the complex logic flows as mermaid diagrams, and exactly what must be tested, while keeping SOLID, DRY and Clean Code principles. Each step file is isolated: it never mentions or decides anything for other steps, and any conflict with another step aborts the run so the user fixes the plan. Use when the user wants to detail, design, deepen or spec out the implementation steps of a feature request.
-argument-hint: "[step ids, e.g. S03 or S02,S05 | path to plan file]"
+description: Turn each step of ".rff/<feature-name>/plan.md" (written by rff-plan) into a deep, implementation-ready design file ".rff/<feature-name>/step-NN.md", one step at a time. Each step is designed by a new agent and reviewed by a separate new agent, both starting with a clean context when the step starts and keeping it through every review round of that step, then reviewed with the user until approved, and only then does the next step start. Each file specifies the structure to build or change (files, classes, interfaces, enums, methods, attributes, or the stack's equivalents such as HTML sections, CSS classes and JS functions), the complex logic flows as mermaid diagrams, and exactly what must be tested, while keeping SOLID, DRY and Clean Code principles. Each step file is isolated: it never mentions or decides anything for other steps, and any conflict with another step aborts the run so the user fixes the plan. Use when the user wants to detail, design, deepen or spec out the implementation steps of a feature request.
+argument-hint: "[feature name] [step ids, e.g. S03 or S02,S05 | path to plan file inside .rff/<feature-name>/]"
 ---
 
 # rff-steps
 
-Turn the plan in `.rff/plan.md` into one detailed design file per step (`.rff/step-01.md`, `.rff/step-02.md`, ...), **one step at a time**:
+Turn the plan in `<feature-dir>/plan.md` into one detailed design file per step (`<feature-dir>/step-01.md`, `<feature-dir>/step-02.md`, ...), **one step at a time**:
 
 1. Each step is designed in a **fresh, clean context** (a new subagent that knows only that step, the shared contract and the approved files it depends on).
 2. The step is **reviewed**, first by another new subagent with a clear context, then by the user, and revised until the user approves it.
@@ -17,6 +17,18 @@ Turn the plan in `.rff/plan.md` into one detailed design file per step (`.rff/st
 You are the orchestrator. Keep your own context light: you do not design or review steps yourself and you do not read the codebase in depth. The detailed design rules live in `step-design.md` and the review rules in `step-review.md`, next to this `SKILL.md` (in this skill's base directory).
 
 Design only. No step is implemented.
+
+## Feature folder
+
+Every file of an rff request lives in a folder exclusive to that request: `<project-root>/.rff/<feature-name>/` (the **feature folder**, written `<feature-dir>` in this skill and in `step-design.md` / `step-review.md`). `<project-root>` is the git top level (`git rev-parse --show-toplevel`); without a git repository, it is the working directory, or the parent of `.rff/` when the working directory is inside a `.rff/` folder.
+
+Pick it before anything else:
+
+1. **Already defined**: if `$ARGUMENTS` names the feature (a word that is not a step id: a feature name, or a path inside `.rff/<feature-name>/`), or a feature folder was already settled earlier in this session (by `rff-create` or another rff skill), use it without asking.
+2. **Otherwise ask** with `AskUserQuestion` which feature to work with. List the existing folders in `<project-root>/.rff/`. The first option, suffixed "(Recommended)", is the **current folder**: the feature folder the working directory is in (`.rff/<name>/` or below it); when the working directory is not inside one, recommend the most recently modified feature folder instead. Add up to three other existing feature folders as options; the user can type another name with "Other".
+3. If the chosen folder does not exist, tell the user and stop.
+
+Every file this skill and its subagents use or generate for the request (the RFF, the plan, the contract, the step files) is in the feature folder; never read rff files from, or write them to, anywhere else (other feature folders included). Every subagent brief includes the feature folder's absolute path.
 
 ## Step isolation and conflicts
 
@@ -38,16 +50,16 @@ When a conflict appears, at any point (loading the plan, the designer's work, th
 1. Stop. Do not resolve it yourself, do not ask the user to decide it here, do not edit the plan, and do not start or continue any step.
 2. If a step file was written for the step being detailed, delete it and set that step back to `pending` in the contract. Steps already `approved` stay as they are.
 3. Show the user every conflict found: what it is, which steps and plan sections it involves, the evidence (file and quote), and, as a suggestion only, how the plan could be changed to remove it.
-4. Tell the user to resolve the conflict in the plan file (link it: `.rff/plan.md`, or the plan path in use) and then run `rff-steps` again.
+4. Tell the user to resolve the conflict in the plan file (link it: `<feature-dir>/plan.md`, or the plan path in use) and then run `rff-steps` again.
 5. End the operation. Nothing else runs in this invocation.
 
 ## 1. Load the plan
 
 1. **Find the plan.**
-   - If `$ARGUMENTS` contains a path to a `.md` file, use it.
-   - Otherwise use `.rff/plan.md` at the project root. If several `plan*.md` files exist in `.rff/`, ask which one with `AskUserQuestion`.
-   - If none exists, tell the user to run `rff-plan` first, and stop.
-2. **Read the whole plan**: overview, layers, every step, stages, coverage and assumptions. Skim the source RFF it names, only enough to know its requirements and non-goals.
+   - If `$ARGUMENTS` contains a path to a `.md` file inside the feature folder, use it.
+   - Otherwise use `<feature-dir>/plan.md`. If several `plan*.md` files exist in `<feature-dir>/`, ask which one with `AskUserQuestion`.
+   - If none exists, tell the user to run `rff-plan` for this feature first, and stop.
+2. **Read the whole plan**: overview, layers, every step, stages, coverage and assumptions. Skim the source RFF (`<feature-dir>/request-for-feature.md`), only enough to know its requirements and non-goals.
 3. **Pick the steps to detail.**
    - If `$ARGUMENTS` lists step ids (`S03`, `S02,S05`, `S04-S07`), detail only those.
    - Otherwise detail every step that is not yet `approved` in the contract (section 2).
@@ -55,7 +67,7 @@ When a conflict appears, at any point (loading the plan, the designer's work, th
 
 ## 2. Create or load the design contract
 
-The contract, `.rff/design-contract.md`, is the memory shared by all the clean contexts. It is how one step's decisions reach the next step without carrying the whole conversation.
+The contract, `<feature-dir>/design-contract.md`, is the memory shared by all the clean contexts. It is how one step's decisions reach the next step without carrying the whole conversation.
 
 If it does not exist, create it from the plan (and a quick look at the files the plan names, only to confirm existing names):
 
@@ -96,8 +108,8 @@ For each step, in order, run the full cycle below. Never start the next step bef
 
 Start a **new** subagent with the Agent tool (`subagent_type: general-purpose`; never `fork`, which would carry this conversation). Each step gets its own new subagent. Brief it with:
 
-- The step id and title, and the output path (`.rff/step-NN.md`).
-- Absolute paths to: `step-design.md` (in this skill's base directory), the plan, the source RFF, `.rff/design-contract.md`, and the **approved** step files of the steps this one depends on.
+- The step id and title, the absolute path of the feature folder, and the output path (`<feature-dir>/step-NN.md`).
+- Absolute paths to: `step-design.md` (in this skill's base directory), the plan, the source RFF, `<feature-dir>/design-contract.md`, and the **approved** step files of the steps this one depends on.
 - The instruction: "Follow `step-design.md` exactly. Detail only this step: do not mention other steps or decide anything for them. If you find a conflict with another step, do not write the step file; report it with status `conflict`. Otherwise write only the step file. Report back in the format at the end of `step-design.md`."
 - Any user decisions relevant to this step that are not yet in the contract.
 
@@ -113,8 +125,8 @@ Otherwise the step file is reviewed by a reviewer subagent, never by you and nev
 
 **First review of the step.** Start a **new** reviewer with the Agent tool (`subagent_type: general-purpose`; never `fork`, and never a reviewer from an earlier step), so it starts with a clear context. Brief it with:
 
-- The step id and title, and the path of the step file to review.
-- Absolute paths to: `step-review.md` and `step-design.md` (in this skill's base directory), the plan, the source RFF, `.rff/design-contract.md`, and the **approved** step files of the steps this one depends on.
+- The step id and title, the absolute path of the feature folder, and the path of the step file to review.
+- Absolute paths to: `step-review.md` and `step-design.md` (in this skill's base directory), the plan, the source RFF, `<feature-dir>/design-contract.md`, and the **approved** step files of the steps this one depends on.
 - The instruction: "Follow `step-review.md` exactly. Review only this step file; do not edit any file. Report back in the format at the end of `step-review.md`. You will be asked to re-review this file after each revision until the step is approved."
 
 Keep its agent id.
@@ -168,9 +180,9 @@ When every selected step is approved or skipped:
 
 If the Agent tool is not available, still work one step at a time, and keep design and review in separate clean contexts by splitting them across runs:
 
-1. **Design run**: design the step yourself by following `step-design.md`, write the file, set it to `draft` with the note `awaiting review` in the contract, and tell the user to clear the context (`/clear`) and run `rff-steps` again.
+1. **Design run**: design the step yourself by following `step-design.md`, write the file, set it to `draft` with the note `awaiting review` in the contract, and tell the user to clear the context (`/clear`) and run `rff-steps <feature-name>` again.
 2. **Review run**: a step marked `awaiting review` is picked up first. Review it by following `step-review.md`, without reading anything about how it was designed beyond the step file. On `pass`, run 3.3 and close it with 3.4. On `fail`, fix the issues and re-review the fixed file in the same run (section 5 of `step-review.md`), repeating until `pass`; the review context is kept until the step is approved. On `conflict`, abort.
-3. After a step is approved, tell the user to `/clear` and run `rff-steps` again; the contract makes the next run resume at the next pending step.
+3. After a step is approved, tell the user to `/clear` and run `rff-steps <feature-name>` again; the contract makes the next run resume at the next pending step.
 
 The isolation and conflict rules apply unchanged.
 

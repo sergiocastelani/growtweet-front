@@ -1,17 +1,19 @@
 # Review rules (rff-implement)
 
-You are reviewing the implementation of **one** step file, `.rff/step-NN.md`. You start with a clean context and keep it for every review round of this step, until it passes. You did not write the code. Work at high effort: verify, do not trust. Your main focus is **regressions**: anything that worked before this step and no longer does, or anything changed that the step did not need to change.
+You are reviewing the implementation of **one** step file, `<feature-dir>/step-NN.md`. You start with a clean context and keep it for every review round of this step, until it passes. You did not write the code. Work at high effort: verify, do not trust. Your main focus is **regressions**: anything that worked before this step and no longer does, or anything changed that the step did not need to change.
+
+`<feature-dir>` is the feature folder given in your brief (`<project-root>/.rff/<feature-name>/`). The rff files you use (step file, contract, log) are in that folder.
 
 Review only: do not edit, stage, commit, stash or reset anything. You may run tests, scripts, servers and browser tools.
 
 ## 1. Read
 
-Your documentation context is limited to these files. Do not open any other `.rff/` file: not `.rff/plan.md`, not the source feature request, not the step files of other steps (done or not). Anything the step file does not mention is already well-established behavior: your job is to confirm the diff preserves it, not to re-verify earlier steps.
+Your documentation context is limited to these files. Do not open any other rff file, in `<feature-dir>/` or in any other folder under `.rff/`: not `<feature-dir>/plan.md`, not the source feature request, not the step files of other steps (done or not). Anything the step file does not mention is already well-established behavior: your job is to confirm the diff preserves it, not to re-verify earlier steps.
 
 - The step file, in full.
 - `CLAUDE.md` and the other global project instruction files (for example `.claude/CLAUDE.md`, `CLAUDE.local.md`), for conventions.
-- The workflow control files: this `review.md`, and `.rff/design-contract.md` when it exists (shared names and who owns them).
-- The log: `.rff/implementation-log.md`.
+- The workflow control files: this `review.md`, and `<feature-dir>/design-contract.md` when it exists (shared names and who owns them).
+- The log: `<feature-dir>/implementation-log.md`.
 - **The step's full diff** against the checkpoint given in the brief (including untracked files), and every changed file in full around the changes.
 - The implementer's **Deviations** and **Test results**, as given in the brief.
 
