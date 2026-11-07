@@ -2,6 +2,7 @@ import styled from "styled-components";
 import React from "react";
 import { ApiAuth } from "../../api/api-auth";
 import { PulseLoader } from "react-spinners";
+import { isAxiosError } from "axios";
 
 export interface LoginFormProps 
 {
@@ -26,8 +27,11 @@ export function LoginForm(props: LoginFormProps)
             .then(() => {
                 props.onSuccess?.();
             })
-            .catch((reason: any) => {
-                setErrorMessage(reason.response?.data?.message ?? reason.message);
+            .catch((reason: unknown) => {
+                if (isAxiosError(reason))
+                    setErrorMessage(reason.response?.data?.message ?? reason.message);
+                else
+                    setErrorMessage(reason instanceof Error ? reason.message : String(reason));
             })
             .finally(() => setLoading(false));
 

@@ -13,12 +13,17 @@ export interface TweetNewFormProps
     onCancel: () => void;
 }
 
+interface TweetFormData
+{
+    content: string;
+}
+
 export function TweetNewForm(props: TweetNewFormProps)
 {
     const [loading, setLoading] = useState(false);
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm<TweetFormData>();
 
-    const onSubmit = async (formData: any) => 
+    const onSubmit = async (formData: TweetFormData) =>
     {
         if (loading)
             return;
@@ -35,16 +40,11 @@ export function TweetNewForm(props: TweetNewFormProps)
             setLoading(false);
             props.onCreated();
         } 
-        catch (error: any) 
+        catch (error: unknown)
         {
             setLoading(false);
-            if(error.response?.data?.message) {
-                alert(`Error: ${error.response?.data?.message}`);
-                return;
-            }
-
             if (isAxiosError(error)) {
-                alert(`Error: ${error.message}`);
+                alert(`Error: ${error.response?.data?.message ?? error.message}`);
                 return;
             }
 

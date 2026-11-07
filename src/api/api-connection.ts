@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
 
 export class ApiConnection 
 {
@@ -9,7 +9,7 @@ export class ApiConnection
 
     constructor() 
     {
-        const headers : any = {};
+        const headers : RawAxiosRequestHeaders = {};
 
         headers[ApiConnection.AUTH_TOKEN_NAME] = localStorage.getItem('token');
 
@@ -19,19 +19,19 @@ export class ApiConnection
         });
     }
 
-    async get(url: string, config?: AxiosRequestConfig<any>)
+    async get(url: string, config?: AxiosRequestConfig)
     {
         return this.axiosInstance.get(url, config)
             .catch(unauthorizedErrorHandler);
     }
 
-    async post(url: string, data?: any)
+    async post(url: string, data?: unknown)
     {
         return this.axiosInstance.post(url, data)
             .catch(unauthorizedErrorHandler);
     }
 
-    async put(url: string, data?: any)
+    async put(url: string, data?: unknown)
     {
         return this.axiosInstance.put(url, data)
             .catch(unauthorizedErrorHandler);
@@ -44,7 +44,7 @@ export class ApiConnection
     }
 }
 
-function unauthorizedErrorHandler(error: any)
+function unauthorizedErrorHandler(error: unknown)
 {
     if (axios.isAxiosError(error))
     {

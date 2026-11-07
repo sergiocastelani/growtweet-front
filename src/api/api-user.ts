@@ -11,7 +11,7 @@ export class ApiUser extends ApiConnection
         super();
     }
 
-    async byId(userId: number) : Promise<AxiosResponse<UserDisplayInfoDTO,any>>
+    async byId(userId: number) : Promise<AxiosResponse<UserDisplayInfoDTO>>
     {
         return super.get(`/user/${userId}`);
     }

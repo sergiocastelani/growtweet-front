@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 export interface ModalProps 
 {
     children: ReactNode;
-};
+}
 
 export function Modal(props: ModalProps)
 {
