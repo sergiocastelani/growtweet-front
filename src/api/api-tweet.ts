@@ -9,17 +9,17 @@ export class ApiTweet extends ApiConnection
         super();
     }
 
-    async all() : Promise<AxiosResponse<TweetDisplayInfosDTO,any>>
+    async all() : Promise<AxiosResponse<TweetDisplayInfosDTO>>
     {
         return super.get('/tweet/all');
     }
 
-    async replies(tweetId: number) : Promise<AxiosResponse<TweetDisplayInfosDTO,any>>
+    async replies(tweetId: number) : Promise<AxiosResponse<TweetDisplayInfosDTO>>
     {
         return super.get(`/tweet/replies/${tweetId}`);
     }
 
-    async fromUserId(userId: number) : Promise<AxiosResponse<TweetDisplayInfosDTO,any>>
+    async fromUserId(userId: number) : Promise<AxiosResponse<TweetDisplayInfosDTO>>
     {
         return super.get(`/tweet/user/${userId}`);
     }

@@ -8,7 +8,7 @@ export interface TweetListProps
     tweets: TweetDisplayInfo[];
     loading?: boolean;
     beforeRenderDisplay?: (index: number, props: TweetDisplayProps) => void;
-};
+}
 
 export function TweetList(props: TweetListProps)
 {
