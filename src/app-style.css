@@ -6,6 +6,7 @@
     --color-surface-1: #17171a;                     /* raised: cards, News, auth panels */
     --color-surface-2: #1f1f23;                     /* elevated: modal, toast, menus */
     --color-surface-hover: rgb(255 255 255 / 0.05); /* row/item hover tint, layered on any surface */
+    --color-surface-pressed: rgb(255 255 255 / 0.1); /* pressed tint, layered on any surface */
     --color-border: #2a2a2f;                        /* dividers, input borders */
 
     /* Text */
@@ -18,6 +19,7 @@
     --color-accent-hover: rgb(240, 130, 66);
     --color-accent-pressed: rgb(204, 93, 30);
     --color-accent-subtle: rgb(230 110 41 / 0.12);  /* tinted hovers, e.g. like */
+    --color-accent-subtle-pressed: rgb(230 110 41 / 0.24); /* pressed tinted controls */
     --color-on-accent: #fff;
     --color-focus-ring: var(--color-accent);
 

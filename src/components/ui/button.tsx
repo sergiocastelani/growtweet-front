@@ -30,6 +30,10 @@ const VARIANT_STYLES: Record<ButtonVariant, ReturnType<typeof css>> = {
         &:hover:not(:disabled) {
             background-color: var(--color-surface-hover);
         }
+
+        &:active:not(:disabled) {
+            background-color: var(--color-surface-pressed);
+        }
     `,
 };
 

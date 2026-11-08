@@ -15,10 +15,20 @@ const TONE_STYLES: Record<IconButtonTone, ReturnType<typeof css>> = {
             background-color: var(--color-surface-hover);
             color: var(--color-text);
         }
+
+        &:active:not(:disabled) {
+            background-color: var(--color-surface-pressed);
+            color: var(--color-text);
+        }
     `,
     accent: css`
         &:hover:not(:disabled) {
             background-color: var(--color-accent-subtle);
+            color: var(--color-accent);
+        }
+
+        &:active:not(:disabled) {
+            background-color: var(--color-accent-subtle-pressed);
             color: var(--color-accent);
         }
     `,

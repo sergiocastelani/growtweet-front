@@ -137,6 +137,10 @@ const Cancel = styled.button`
     &:hover {
         background-color: color-mix(in srgb, var(--color-bg-danger-1) 80%, white);
     }
+
+    &:active {
+        background-color: color-mix(in srgb, var(--color-bg-danger-1) 85%, black);
+    }
 `;
 
 const Submit = styled.button`
@@ -145,6 +149,10 @@ const Submit = styled.button`
 
     &:not(:disabled):hover {
         background-color: color-mix(in srgb, var(--color-bg-2) 80%, white);
+    }
+
+    &:not(:disabled):active {
+        background-color: color-mix(in srgb, var(--color-bg-2) 85%, black);
     }
 
     &[disabled] {

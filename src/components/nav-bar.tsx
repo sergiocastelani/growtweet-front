@@ -112,6 +112,10 @@ const CreateTweetButton = styled.button`
     &:hover {
         background-color: color-mix(in srgb, var(--color-bg-4) 80%, white);
     }
+
+    &:active {
+        background-color: color-mix(in srgb, var(--color-bg-4) 85%, black);
+    }
 `;
 
 const LoginButton = styled.button`
@@ -126,6 +130,10 @@ const LoginButton = styled.button`
 
     &:hover {
         background-color: color-mix(in srgb, var(--color-bg-4) 80%, white);
+    }
+
+    &:active {
+        background-color: color-mix(in srgb, var(--color-bg-4) 85%, black);
     }
 `;
 
