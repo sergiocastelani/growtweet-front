@@ -10,7 +10,7 @@
 | S09 | [step-09.md](step-09.md) | done | 1 | dc8dead | Reviewer verified link pressed state in Chrome |
 | S04 | [step-04.md](step-04.md) | done | 1 | 8abf2cd | Local DB sequences advanced; test user id 12 created by agents |
 | S05 | [step-05.md](step-05.md) | done | 1 | 3455812 | Note for S10: profile-header Logout icon sits 8px right of Edit icon (Logout now padded) |
-| S06 | [step-06.md](step-06.md) | in-progress | 0 | - | - |
+| S06 | [step-06.md](step-06.md) | done | 1 | dfeaee0 | 1 needs-human check pending. Note for S07: HBox still reserves 3rem (48px) but bar is now 56px; bottom 8px clipped on long pages |
 | S07 | [step-07.md](step-07.md) | pending | 0 | - | - |
 | S08 | [step-08.md](step-08.md) | pending | 0 | - | - |
 | S10 | [step-10.md](step-10.md) | pending | 0 | - | - |
@@ -29,9 +29,11 @@ Deviations from a step file's implementation suggestions, as reported by its imp
 - (S09) Inline `/* */` comments from the step's code skeleton left out; CSS identical.
 - (S04) none (private helper naming only).
 - (S05) `UserTag` also gets `line-height: var(--line-height-tight)`, like `UserName`.
+- (S06) Comment on `BAR_ITEM_SIZE` reworded so the `mobile-nav-height` static check has one match; no code difference.
 
 ## Checks confirmed by the user
 
 ## Checks pending human confirmation
 - (S02) Pressed state: holding the mouse on a primary Button darkens and slightly shrinks it (CSS rules verified present).
 - (S02) DevTools Rendering > prefers-reduced-motion: reduce, hovering a Button changes color instantly (global rule verified loaded).
+- (S06) iPhone safe area: on an iPhone with a home indicator, open the app at mobile width; the bottom bar grows by the safe-area inset and its items stay centered in the top 56px, above the home indicator (note: without viewport-fit=cover iOS reports an inset of 0) — pending
