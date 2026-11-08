@@ -56,8 +56,9 @@ Status: pending | in-progress | done | skipped | blocked
 Deviations from a step file's implementation suggestions, as reported by its implementer and accepted by its reviewer.
 - (S01) ...
 
-## Checks confirmed by the user
-- (S01) ...
+## Checks pending for the user
+`needs-human` checks, collected from each step and verified by the user only after the run (section 4).
+- (S01) <check name>: <exact steps from the step file> — pending | pass | fail
 ```
 
 **Checkpoints.** The reviewer must see exactly what the current step changed. Before the first step of this run, if the working tree has uncommitted changes, show `git status --short` to the user and ask how to proceed (commit them, keep them as part of the baseline, or stop). Then ask once per run, with `AskUserQuestion`, how to checkpoint each finished step:
@@ -112,10 +113,10 @@ Act on the verdict:
 
 ### 3.3 Close the step
 
-1. If the implementer listed checks as `needs-human` (checks no agent tool could run, for example a visual judgment), and the reviewer did not reject that classification, present them to the user with the exact steps from the step file and ask with `AskUserQuestion`: **All pass** / **Some fail** (the user describes which; send it in their words to the same implementer and repeat 3.2). Record confirmed checks in the log.
+1. If the implementer listed checks as `needs-human` (checks no agent tool could run, for example a visual judgment), and the reviewer did not reject that classification, **do not ask the user to run them now**. Record each one in the log under "Checks pending for the user", with the exact steps from the step file and status `pending`. The user verifies them only after all steps are implemented (section 4).
 2. Checkpoint the step (commit or stage, as chosen in section 2).
 3. Update the log: status `done`, the number of review rounds, the checkpoint, and the accepted deviations.
-4. Tell the user in one line that the step is done (with any notable deviation) and which step comes next, then start 3.1 for the next step.
+4. Tell the user in one line that the step is done (with any notable deviation, and how many checks were deferred to the end) and which step comes next, then start 3.1 for the next step right away, without waiting for the user.
 
 The step's loop is now over: its implementer and reviewer are not used again.
 
@@ -135,15 +136,20 @@ A step is blocked when the implementer or the reviewer reports `blocked` (the st
 When every selected step is `done` or `skipped`, or the run was stopped:
 
 - List the step files, as clickable markdown links, with their status, review rounds and checkpoint.
-- List the deviations recorded in the log, the checks the user confirmed, and any step left `skipped` or `blocked`.
+- List the deviations recorded in the log, and any step left `skipped` or `blocked`.
 - If you staged instead of committing, say that nothing is committed yet.
+- **What the user should test.** Present every `pending` check from the log's "Checks pending for the user", grouped by step, each with the exact steps to perform from its step file (where to go, what to do, what to expect). If there are none, say that every check was verified by the agents. Then ask with `AskUserQuestion`: **All pass** / **Some fail** / **Test later**.
+  - **All pass**: mark them `pass` in the log.
+  - **Some fail**: the user describes which and how, in their words. Mark those `fail` in the log. For each affected step, run a new fix loop: a new implementer and a new reviewer (section 3.1–3.2), briefed with the step file, the checkpoint of the last step of this run, and the user's feedback verbatim; then checkpoint the fix as in section 2 (commit message `fix(rff): <step id> - <short description>`) and present the remaining checks again.
+  - **Test later**: leave them `pending` in the log, so the next run of this skill presents them again.
 
 ## Guidelines
 
 - One step at a time, always. No parallel agents, no batching of steps.
 - Implementer and reviewer are always different agents. Both start with a clean context at the start of a step's loop and keep it until that loop is over; they are never reused for another step. You never implement or review a step yourself.
 - The reviewer always runs with `effort: "high"`.
-- The step file's tests and checks are the bar: a step is done only when they all exist and pass (agent-verified, or confirmed by the user for `needs-human` checks), and existing behavior the step does not mention is unchanged.
+- The step file's tests and checks are the bar: a step is done only when they all exist and pass (agent-verified; `needs-human` checks are deferred to the end of the run), and existing behavior the step does not mention is unchanged.
+- Never stop the step loop to ask the user for manual tests. The only manual-test request of a run comes in section 4, after every step is implemented.
 - Keep both agents' context minimal: the step file, global project instructions (`CLAUDE.md` and similar), the workflow control files (`implement.md` / `review.md`, `<feature-dir>/design-contract.md`) and the log (`<feature-dir>/implementation-log.md`), plus the code itself. Never brief them with the plan or other step files.
 - Forward findings and user feedback faithfully; do not reinterpret them.
 - Write in the same language as the step files.
