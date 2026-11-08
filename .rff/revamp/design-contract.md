@@ -10,7 +10,7 @@
 | S02 | Shared UI primitives (buttons, icon button, fields, alert, panel, page title) | approved | [step-02.md](step-02.md) |
 | S03 | Toast variants and an app-level toast service | approved | [step-03.md](step-03.md) |
 | S09 | News box as a dark raised card | approved | [step-09.md](step-09.md) |
-| S04 | Themed new-tweet/reply dialog with Esc/backdrop close, counter and inline errors | pending | - |
+| S04 | Themed new-tweet/reply dialog with Esc/backdrop close, counter and inline errors | approved | [step-04.md](step-04.md) |
 | S05 | Desktop NavBar with active route, primary pill and compact user chip | pending | - |
 | S06 | Mobile bottom bar with Lucide icons, active state and safe-area padding | pending | - |
 | S07 | Main layout, central-column titles, Explore page and replies inline error | pending | - |
@@ -50,7 +50,7 @@ Names that cross steps, as the plan assigns them. Details are filled in from eac
 | `ToastVariant` | type (`src/components/toast-context.ts`) | S03 | S13 | |
 | `ToastProvider` (`pinnedToast?`) | component (`src/components/toast-provider.tsx`) | S03 | S03 (`App.tsx`); S04 (stacking) | Renders a fixed top-center stack at `z-index: 1000` with `pointer-events: none`, above dialogs; optional pinned (non-dismissing) toast first |
 | `useToast()` / `showToast(text, variant?, durationMs?)` | hook (`src/components/toast-context.ts`) | S03 | S04, S13 | Stacked toasts, each auto-dismisses on its own timer (default 3000ms); survives route changes; throws outside the provider |
-| `Modal` (`onClose`, `closeDisabled`, `labelledBy`) | component (`src/components/modal.tsx`) | S04 | S04 | |
+| `Modal` (`onClose`, `closeDisabled`, `labelledBy`) | component (`src/components/modal.tsx`) | S04 | S04 | Portaled to `document.body`, z-index below the toast stack; Esc/backdrop close unless `closeDisabled`; body scroll lock; focus in on open, back to opener on close |
 | `TweetNewForm` (`replyId?`, `onCreated`, `onCancel`) | component (existing) | S04 (restyle) | S05, S06, S08 | Props unchanged |
 | `LogoutButton` | component (existing, `src/components/logout-button.tsx`) | S05 (restyle) | S10 | No props |
 
@@ -67,3 +67,7 @@ Decisions approved during a step's review, each about that step's own work only.
 - (S03) The warm-up toast joins the same stack as a pinned toast (`ToastProvider` `pinnedToast` prop from `App.tsx`), never auto-dismisses; ping/timer/reload logic unchanged.
 - (S03) Slide-in uses `--duration-slow` (250ms) and a full slide-down; a new lower toast briefly passes over the one above while sliding (accepted).
 - (S09) Orange accent on the "Show more ..." link only; the News title stays white. Card styles are local to `news.tsx`.
+- (S04) Unknown (non-axios) error: dialog stays open and shows a danger toast `Unknow error occurred!!` (no `onCancel()`); API errors use the inline banner.
+- (S04) No focus trap; focus returns to the opener when the dialog closes.
+- (S04) Dialog max width 600px; dialog is portaled to `document.body` and sits below the toast stack.
+- (S04) The inline API error banner clears as soon as the user edits the text (and when a submit starts).
