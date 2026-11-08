@@ -48,8 +48,8 @@ Names that cross steps, as the plan assigns them. Details are filled in from eac
 | `Toast` (`text`, `variant`) | component (`src/components/toast.tsx`) | S03 | S03 | Plain card (no positioning); `ToastProps = ToastContent` |
 | `ToastContent` (`text`, `variant?`) | type (`src/components/toast-context.ts`) | S03 | S03 | |
 | `ToastVariant` | type (`src/components/toast-context.ts`) | S03 | S13 | |
-| `ToastProvider` (`pinnedToast?`) | component (`src/components/toast-provider.tsx`) | S03 | S03 (`App.tsx`) | Renders a fixed top-center stack; optional pinned (non-dismissing) toast first |
-| `useToast()` / `showToast(text, variant?, durationMs?)` | hook (`src/components/toast-context.ts`) | S03 | S13 | Stacked toasts, each auto-dismisses on its own timer (default 3000ms); survives route changes; throws outside the provider |
+| `ToastProvider` (`pinnedToast?`) | component (`src/components/toast-provider.tsx`) | S03 | S03 (`App.tsx`); S04 (stacking) | Renders a fixed top-center stack at `z-index: 1000` with `pointer-events: none`, above dialogs; optional pinned (non-dismissing) toast first |
+| `useToast()` / `showToast(text, variant?, durationMs?)` | hook (`src/components/toast-context.ts`) | S03 | S04, S13 | Stacked toasts, each auto-dismisses on its own timer (default 3000ms); survives route changes; throws outside the provider |
 | `Modal` (`onClose`, `closeDisabled`, `labelledBy`) | component (`src/components/modal.tsx`) | S04 | S04 | |
 | `TweetNewForm` (`replyId?`, `onCreated`, `onCancel`) | component (existing) | S04 (restyle) | S05, S06, S08 | Props unchanged |
 | `LogoutButton` | component (existing, `src/components/logout-button.tsx`) | S05 (restyle) | S10 | No props |

@@ -131,10 +131,10 @@ The project is a frontend SPA with no test suite. The API layer exists but is a 
 
 - **Type:** Slice
 - **Purpose:** Make the tweet composer modern and accessible: a dark animated dialog that closes like Cancel (FR-10), a live character counter (FR-11), inline API errors instead of `alert()` (FR-12) and the new button hierarchy (FR-07).
-- **Behavior:** Opening "Tweet Now", the mobile "+" or a reply shows a dark rounded dialog over a dimmed/blurred backdrop with a fade/scale-in; the page behind cannot scroll and the dialog covers the viewport even when scrolled. Esc or a backdrop click closes it exactly like Cancel, and all three are ignored while submitting. A live `n / 250` counter turns warning at ≥ 230 and danger above 250. API errors appear in an inline danger banner and the dialog stays open for retry/cancel. Cancel is a ghost button, Submit an orange pill.
+- **Behavior:** Opening "Tweet Now", the mobile "+" or a reply shows a dark rounded dialog over a dimmed/blurred backdrop with a fade/scale-in; the page behind cannot scroll and the dialog covers the viewport even when scrolled. Esc or a backdrop click closes it exactly like Cancel, and all three are ignored while submitting. A live `n / 250` counter turns warning at ≥ 230 and danger above 250. API errors appear in an inline danger banner and the dialog stays open for retry/cancel; an unknown error shows a danger toast and the dialog also stays open. Cancel is a ghost button, Submit an orange pill.
 - **Requirements covered:** FR-10, FR-11, FR-12 (tweet form), FR-07, FR-06, FR-05 (no icons from other sets)
-- **Depends on:** S01, S02
-- **Prerequisites:** S01 tokens (`--color-surface-2`, `--color-backdrop`, `--shadow-2`, `--radius-lg`, `--color-warning`, `--color-danger`, motion tokens); S02 `Button`, `TextArea`, `FieldLabel`, `FieldError`, `InlineAlert`.
+- **Depends on:** S01, S02, S03
+- **Prerequisites:** S01 tokens (`--color-surface-2`, `--color-backdrop`, `--shadow-2`, `--radius-lg`, `--color-warning`, `--color-danger`, motion tokens); S02 `Button`, `TextArea`, `FieldLabel`, `FieldError`, `InlineAlert`; S03 `useToast()` (`showToast(text, "danger")`) and the toast stack rendering above dialogs (`z-index` 1000).
 - **Provides:**
   - `Modal` (`src/components/modal.tsx`): props `{ children: ReactNode; onClose?: () => void; closeDisabled?: boolean; labelledBy?: string }`. Renders a `position: fixed` backdrop + `role="dialog"` `aria-modal="true"` panel; Esc and backdrop click call `onClose` unless `closeDisabled`; locks `document.body` scroll while mounted and restores it on unmount; moves focus into the dialog on open if nothing inside already took it.
   - `TweetNewForm` (`src/components/tweet/tweet-new-form.tsx`): **public props unchanged** (`replyId?: number; onCreated: () => void; onCancel: () => void`), so existing callers keep working untouched.
@@ -142,7 +142,7 @@ The project is a frontend SPA with no test suite. The API layer exists but is a 
   | Layer | Files | Change |
   |-------|-------|--------|
   | Components | `src/components/modal.tsx` | modify: fixed backdrop, themed dialog, animation, Esc/backdrop, scroll lock, ARIA, focus |
-  | Components | `src/components/tweet/tweet-new-form.tsx` | modify: pass `onClose`/`closeDisabled={loading}` to `Modal`, counter via `watch("content")`, `InlineAlert` for API errors (same message text: `Error: <message>` / `Unknow error occurred!!`), ghost Cancel + primary Submit, recolored `PulseLoader` |
+  | Components | `src/components/tweet/tweet-new-form.tsx` | modify: pass `onClose`/`closeDisabled={loading}` to `Modal`, counter via `watch("content")`, `InlineAlert` for API errors (same message text: `Error: <message>`); danger toast `Unknow error occurred!!` for unknown errors (dialog stays open), ghost Cancel + primary Submit, recolored `PulseLoader` |
 - **How to test:**
   - Automated: `npm run lint`, `npm run build`; `grep -n "alert(" src/components/tweet/tweet-new-form.tsx` returns nothing.
   - Manual: Given a logged-in user on a long, scrolled feed, when clicking "Tweet Now", then the dialog is centered in the viewport, the backdrop covers everything, and the feed does not scroll behind it; the textarea has focus.
@@ -150,7 +150,7 @@ The project is a frontend SPA with no test suite. The API layer exists but is a 
   - Manual: Given typing, then the counter shows `n / 250`, turns warning at 230 and danger at 251; submitting 251 chars shows "Message can have a maximum of 250 characters"; submitting empty shows "Message can't be empty".
   - Manual: Given the API returns an error (e.g. stop the backend or force a 400), when submitting, then an inline danger banner shows `Error: <message>`, no browser alert appears, and the dialog stays open; during submission Esc/backdrop/Cancel do nothing.
   - Parity: Given a new tweet, Network shows one `POST` to the create endpoint then a full page reload; given a reply, `GET /auth/check` (from the caller) then the reply `POST`, then reload. Same payloads as before.
-- **Notes / risks:** Keep the existing "unknown error" path calling `props.onCancel()` (RFF §5) — it closes the dialog, as today. Keep the `loading` guard on Cancel. Body scroll lock: the central column (`CentralWidget`) is the real scroller, so lock `document.body` overflow and rely on the fixed backdrop to block pointer/scroll events reaching the column.
+- **Notes / risks:** **Deviation from RFF §5:** the "unknown error" path no longer calls `props.onCancel()`; it shows the danger toast `Unknow error occurred!!` via `showToast(text, "danger")` and keeps the dialog open (user decision). The dialog must sit below the toast stack (`z-index` < 1000) so the toast shows over it. Keep the `loading` guard on Cancel. Body scroll lock: the central column (`CentralWidget`) is the real scroller, so lock `document.body` overflow and rely on the fixed backdrop to block pointer/scroll events reaching the column.
 
 ### S05 - Desktop NavBar with active route, primary pill and compact user chip
 
@@ -353,7 +353,7 @@ The project is a frontend SPA with no test suite. The API layer exists but is a 
 | 2 | S02, S03, S09 | 1 | Shared primitives; themed toasts + app-level toast service; News card |
 | 3 | S04, S05, S06, S07, S08, S10, S11, S12, S13 | 1, 2 | Every remaining area restyled and accessible; all `alert()`s gone |
 
-**Critical path:** S01 → S02 → S04 (or any stage-3 step; S13 also needs S03, which runs alongside S02).
+**Critical path:** S01 → S02 → S04 (or any stage-3 step; S04 and S13 also need S03, which runs alongside S02).
 
 **Parallelization notes:**
 - Every component/page file has exactly one owning step (see the Files columns); no two steps edit the same file. `src/app-style.css` and `index.html` are owned by S01 only; later steps never add global CSS.
@@ -378,6 +378,7 @@ graph LR
   S02 --> S11
   S02 --> S12
   S02 --> S13
+  S03 --> S04
   S03 --> S13
 ```
 
@@ -429,8 +430,8 @@ graph LR
 | `PageTitle` | styled component | S02 | S07, S10 | Sticky central-column title with bottom divider |
 | `Toast` (`text`, `variant`) | component | S03 | S03 (`App.tsx`, `ToastProvider`) | Presentational; fixed top-center |
 | `ToastVariant` | type | S03 | S13 | `"info" \| "success" \| "danger"` |
-| `ToastProvider` | component | S03 | `App.tsx` (S03) | Wraps `RouterProvider` |
-| `useToast()` / `showToast(text, variant?, durationMs?)` | hook | S03 | S13 | Toast survives route changes; default 3000ms |
+| `ToastProvider` | component | S03 | `App.tsx` (S03); S04 (stacking) | Wraps `RouterProvider`; stack at `z-index: 1000`, `pointer-events: none`, above dialogs |
+| `useToast()` / `showToast(text, variant?, durationMs?)` | hook | S03 | S04, S13 | Toast survives route changes; default 3000ms |
 | `Modal` (`onClose`, `closeDisabled`, `labelledBy`) | component | S04 | S04 (`TweetNewForm`) | Fixed, Esc/backdrop close, scroll lock, ARIA |
 | `TweetNewForm` (`replyId?`, `onCreated`, `onCancel`) | component | existing; restyled by S04 | S05, S06, S08 | Props unchanged |
 | `LogoutButton` | component | existing; restyled by S05 | S10 | No props; same logout + `navigate(0)` |
