@@ -15,8 +15,8 @@
 | S08 | [step-08.md](step-08.md) | done | 1 | 41f89f4 | Reviewer verified @handle pressed state via CDP (no needs-human left); test reply "S08 reply parity" created on 244 |
 | S10 | [step-10.md](step-10.md) | done | 1 | 1ca18f8 | 1 needs-human check pending. Test user 13 (s10tester54530) created; implementer accidentally logged out the user's localhost:5173 Chrome session |
 | S11 | [step-11.md](step-11.md) | done | 1 | d6c8979 | Reviewer verified pressed state via CDP (no needs-human left); test user 14 (s11tester9210) created |
-| S12 | [step-12.md](step-12.md) | done | 2 | PENDING | Round 1 fail: whitespace churn only. Test users 15, 16, s12down (via a pre-existing server on 5233, backend unverified), s12r2dup, s12rev34725(b), s12rr43392(b) created |
-| S13 | [step-13.md](step-13.md) | in-progress | 0 | - | - |
+| S12 | [step-12.md](step-12.md) | done | 2 | 838eb19 | Round 1 fail: whitespace churn only. Test users 15, 16, s12down (via a pre-existing server on 5233, backend unverified), s12r2dup, s12rev34725(b), s12rr43392(b) created |
+| S13 | [step-13.md](step-13.md) | done | 1 | PENDING | Reviewer verified pressed state via CDP (no needs-human left); test users 23 (s13tester30829), 24 (s13rev9362) created |
 
 Status: pending | in-progress | done | skipped | blocked
 
@@ -35,6 +35,7 @@ Deviations from a step file's implementation suggestions, as reported by its imp
 - (S10) none.
 - (S11) Side-by-side card is `width: max(60%, 600px)` (not 60%) so nothing clips at 769-1040px; `min-width: 0` on FormPanel as a safety net.
 - (S12) none.
+- (S13) Form keeps the default `import styled` (allowed by the step); files normalized back to LF after editing.
 
 ## Checks confirmed by the user
 

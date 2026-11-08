@@ -6,6 +6,14 @@ import { isAxiosError } from "axios";
 import { ApiAuth } from "../../api/api-auth";
 import { PulseLoader } from "react-spinners";
 import { useState } from "react";
+import { Button } from "../../components/ui/button";
+import { FieldError, FieldLabel, TextInput } from "../../components/ui/field";
+import { InlineAlert } from "../../components/ui/inline-alert";
+
+/** Shown when an update fails without a server message (user decision). */
+const UPDATE_FAILED_MESSAGE = "Error: could not update account";
+
+const LOADER_COLOR = "var(--color-on-accent)";
 
 export interface EditAccountFormProps 
 {
@@ -15,6 +23,7 @@ export interface EditAccountFormProps
 export function EditAccountForm(props: EditAccountFormProps)
 {
     const [loading, setLoading] = useState(false);
+    const [apiError, setApiError] = useState<string | null>(null);
 
     const { register, handleSubmit, getValues, formState: { errors } } = useForm<UserUpdateFormData>({
         defaultValues: async () => {
@@ -39,6 +48,7 @@ export function EditAccountForm(props: EditAccountFormProps)
         try 
         {
             setLoading(true);
+            setApiError(null);
 
             if (formData.newPassword !== undefined && formData.newPassword.length === 0)
                 formData.newPassword = undefined;
@@ -53,12 +63,13 @@ export function EditAccountForm(props: EditAccountFormProps)
             {
                 if (error.response?.data?.message)
                 {
-                    alert(`Error: ${error.response?.data?.message}`);
+                    setApiError(`Error: ${error.response?.data?.message}`);
                     return;
                 }
             }
 
             console.error(error);
+            setApiError(UPDATE_FAILED_MESSAGE);
         }
         finally 
         {
@@ -68,72 +79,93 @@ export function EditAccountForm(props: EditAccountFormProps)
 
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
-            <label htmlFor="username">User name:</label>
-            <Input autoFocus {
-                ...register("username", 
-                {
-                    required: "User name can't be empty", 
-                })} 
-            />
-            {errors.username && 
-                <ErrorMessage>{errors.username.message?.toString()}</ErrorMessage>
-            }
-
-            <label htmlFor="email">Email:</label>
-            <Input {
-                ...register("email", 
-                {
-                    required: "Email can't be empty", 
-                })} 
-            />
-            {errors.email && 
-                <ErrorMessage>{errors.email.message?.toString()}</ErrorMessage>
-            }
-
-            <label htmlFor="name">Full name:</label>
-            <Input {
-                ...register("name", 
-                {
-                    required: "Full name can't be empty", 
-                })} 
-            />
-            {errors.name && 
-                <ErrorMessage>{errors.name.message?.toString()}</ErrorMessage>
-            }
-
-            <label htmlFor="pictureUrl">Picture URL:</label>
-            <Input { ...register("pictureUrl") } />
-
-            <label htmlFor="currentPassword">Current password:</label>
-            <Input type="password" {
-                ...register("currentPassword", 
-                {
-                    required: "Current password can't be empty", 
-                })} 
-            />
-            {errors.currentPassword && 
-                <ErrorMessage>{errors.currentPassword.message?.toString()}</ErrorMessage>
-            }
-
-            <label htmlFor="newPassword">New password (optional):</label>
-            <Input type="password" { ...register("newPassword")} />
-
-            <label htmlFor="newPasswordConfirm">New password confirmation:</label>
-            <Input type="password" {
-                ...register(
-                    "newPasswordConfirm", 
+            <FieldGroup>
+                <FieldLabel htmlFor="username">User name:</FieldLabel>
+                <TextInput id="username" autoFocus
+                    aria-invalid={errors.username ? "true" : undefined} {
+                    ...register("username", 
                     {
-                        validate: (value) => value === getValues('newPassword') || "Password confirmation doesn't match" ,
-                    }
-                )
-            }/>
-            {errors.newPasswordConfirm && 
-                <ErrorMessage>{errors.newPasswordConfirm.message?.toString()}</ErrorMessage>
-            }
+                        required: "User name can't be empty", 
+                    })} 
+                />
+                {errors.username && 
+                    <FieldError>{errors.username.message?.toString()}</FieldError>
+                }
+            </FieldGroup>
 
-            <Button type="submit" disabled={loading}>
-                {loading || 'Update'}
-                <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
+            <FieldGroup>
+                <FieldLabel htmlFor="email">Email:</FieldLabel>
+                <TextInput id="email"
+                    aria-invalid={errors.email ? "true" : undefined} {
+                    ...register("email", 
+                    {
+                        required: "Email can't be empty", 
+                    })} 
+                />
+                {errors.email && 
+                    <FieldError>{errors.email.message?.toString()}</FieldError>
+                }
+            </FieldGroup>
+
+            <FieldGroup>
+                <FieldLabel htmlFor="name">Full name:</FieldLabel>
+                <TextInput id="name"
+                    aria-invalid={errors.name ? "true" : undefined} {
+                    ...register("name", 
+                    {
+                        required: "Full name can't be empty", 
+                    })} 
+                />
+                {errors.name && 
+                    <FieldError>{errors.name.message?.toString()}</FieldError>
+                }
+            </FieldGroup>
+
+            <FieldGroup>
+                <FieldLabel htmlFor="pictureUrl">Picture URL:</FieldLabel>
+                <TextInput id="pictureUrl" { ...register("pictureUrl") } />
+            </FieldGroup>
+
+            <FieldGroup>
+                <FieldLabel htmlFor="currentPassword">Current password:</FieldLabel>
+                <TextInput id="currentPassword" type="password"
+                    aria-invalid={errors.currentPassword ? "true" : undefined} {
+                    ...register("currentPassword", 
+                    {
+                        required: "Current password can't be empty", 
+                    })} 
+                />
+                {errors.currentPassword && 
+                    <FieldError>{errors.currentPassword.message?.toString()}</FieldError>
+                }
+            </FieldGroup>
+
+            <FieldGroup>
+                <FieldLabel htmlFor="newPassword">New password (optional):</FieldLabel>
+                <TextInput id="newPassword" type="password" { ...register("newPassword")} />
+            </FieldGroup>
+
+            <FieldGroup>
+                <FieldLabel htmlFor="newPasswordConfirm">New password confirmation:</FieldLabel>
+                <TextInput id="newPasswordConfirm" type="password"
+                    aria-invalid={errors.newPasswordConfirm ? "true" : undefined} {
+                    ...register(
+                        "newPasswordConfirm", 
+                        {
+                            validate: (value) => value === getValues('newPassword') || "Password confirmation doesn't match" ,
+                        }
+                    )
+                }/>
+                {errors.newPasswordConfirm && 
+                    <FieldError>{errors.newPasswordConfirm.message?.toString()}</FieldError>
+                }
+            </FieldGroup>
+
+            {apiError && <InlineAlert>{apiError}</InlineAlert>}
+
+            <Button type="submit" $fullWidth disabled={loading}>
+                {!loading && "Update"}
+                <PulseLoader loading={loading} size="0.5rem" color={LOADER_COLOR} />
             </Button>
         </Form>
     );
@@ -142,38 +174,16 @@ export function EditAccountForm(props: EditAccountFormProps)
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-4);
 `;
 
-const ErrorMessage = styled.p`
-    color: var(--color-danger-1);
-    margin: 0;
-`;
+const FieldGroup = styled.div`
+    display: flex;
+    flex-direction: column;
 
-const Input = styled.input`
-    border-radius: 5px;
-    border: 1px solid var(--color-fg-5);
-    background-color: var(--color-bg-5);
-    color: var(--color-fg-5);
-    height: 2rem;
-    padding: 0.5rem;
-`;
-
-const Button = styled.button`
-    border-radius: 5px;
-    border: none;
-    background-color: var(--color-bg-2);
-    color: var(--color-fg-2);
-    padding: 0.5rem;
-    font-weight: bold;
-
-    &[disabled] {
-        background-color: var(--color-bg-disabled);
+    & > ${FieldError} {
+        margin-top: var(--space-1);
     }
-`;
-
-const PulseLoaderStyled = styled(PulseLoader)`
-    margin-top: 2px;
 `;
 
 interface UserUpdateFormData extends UserUpdateRequest {
