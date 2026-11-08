@@ -1,128 +1,149 @@
-import styled from "styled-components"
+import { styled, css } from "styled-components";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginForm } from "./login-form";
-import { useNavigate } from "react-router-dom";
+import { CenteredPage, Panel } from "../../components/ui/panel";
 
 export function LoginPage()
 {
     const navigate = useNavigate();
 
     return (
-        <Wrapper>
-            <MainPanel>
-                <LeftPanel>
+        <CenteredPage>
+            <SplitPanel>
+                <WelcomePanel>
                     <h2>Wellcome to</h2>
                     <h1>GrowTweet</h1>
                     <small>Inspirational activity for the course Full Stack Web Starter, from Growdev</small>
                     <p>
-                        An innovative social media application designed to mimic the user-friendly interface and real-time communication features of Twitter. 
-                        GrowTweet offers a seamless and dynamic platform for users to share their thoughts, updates, and engage in conversations with a global audience. 
+                        An innovative social media application designed to mimic the user-friendly interface and real-time communication features of Twitter.
+                        GrowTweet offers a seamless and dynamic platform for users to share their thoughts, updates, and engage in conversations with a global audience.
                     </p>
-                </LeftPanel>
-                <RightPanel>
+                </WelcomePanel>
+                <FormPanel>
                     <h1>Come in...</h1>
                     <LoginForm onSuccess={()=> navigate('/')}/>
-                    <CreateAccountButton onClick={() => navigate('/new-account')}>
-                        Create your new account
-                    </CreateAccountButton>
-                </RightPanel>
-            </MainPanel>
-        </Wrapper>
+                    <CreateAccountLink to="/new-account">Create your new account</CreateAccountLink>
+                </FormPanel>
+            </SplitPanel>
+        </CenteredPage>
     )
 }
 
-const Wrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100vw;
-    background-color: var(--color-bg-1);
-`;
+/** Width at which the two halves stack (unchanged from the current page). */
+const STACK_BREAKPOINT = "768px";
+/** Hero title: one and a half times the largest type-scale step (48px), between the old 64px and the scale's 32px. */
+const HERO_TITLE_SIZE = "calc(var(--font-size-2xl) * 1.5)";
+/** Side-by-side card never narrower than this, so the hero title and the form both fit just above the stack breakpoint. */
+const SIDE_BY_SIDE_MIN_WIDTH = "600px";
 
-const MainPanel = styled.div`
+const SplitPanel = styled(Panel)`
     display: flex;
-    justify-content: center;
     align-items: stretch;
-    height: 60%;
-    min-height: 400px;
-    width: 60%;
+    padding: 0;
+    overflow: hidden;
+    width: max(60%, ${SIDE_BY_SIDE_MIN_WIDTH});
     min-width: 250px;
+    min-height: max(400px, 60dvh);
 
-    @media (width <= 768px) {
-        width: 80%;
+    @media (width <= ${STACK_BREAKPOINT}) {
         flex-direction: column;
+        width: 80%;
     }
 `;
 
-const LeftPanel = styled.div`
+const halfStyles = css`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: stretch;
     flex: 1;
-    background-color: var(--color-bg-5);
-    color: var(--color-fg-5);
-    padding: 50px;
-    border-radius: 20px 0 0 20px;
+    padding: var(--space-6);
 
-    & h1 {
-        font-size: 4rem;
-        margin: 0;
+    @media (width <= ${STACK_BREAKPOINT}) {
+        padding: var(--space-5);
     }
+`;
+
+const WelcomePanel = styled.div`
+    ${halfStyles}
+    background-color: var(--color-accent-subtle);
+    border-right: 1px solid var(--color-border);
 
     & h2 {
         margin: 0;
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-text-secondary);
+    }
+
+    & h1 {
+        margin: 0;
+        font-size: ${HERO_TITLE_SIZE};
+        font-weight: var(--font-weight-bold);
+        line-height: var(--line-height-tight);
+        color: var(--color-accent);
+    }
+
+    & small {
+        display: block;
+        margin-top: var(--space-2);
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
     }
 
     & p {
-        text-align: justify;
-        margin-top: 2rem;
-        line-height: 1.5rem;
+        margin: var(--space-5) 0 0;
+        font-size: var(--font-size-sm);
+        line-height: var(--line-height-base);
+        color: var(--color-text-secondary);
     }
 
-    @media (width <= 768px) {
-        padding: 20px;
-        border-radius: 10px 10px 0 0;
-
-        & h1 {
-            font-size: 2rem;
-        }
+    @media (width <= ${STACK_BREAKPOINT}) {
+        border-right: none;
+        border-bottom: 1px solid var(--color-border);
 
         & h2 {
-            font-size: 1rem;
+            font-size: var(--font-size-md);
+        }
+
+        & h1 {
+            font-size: var(--font-size-2xl);
         }
 
         & p {
-            margin-top: 1rem;
-            line-height: 1.2rem;
-            font-size: 0.9rem;
+            margin-top: var(--space-4);
         }
     }
 `;
 
-const RightPanel = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
-    flex: 1;
-    background-color: var(--color-bg-4);
-    color: var(--color-fg-4);
-    padding: 50px;
-    border-radius: 0px 20px 20px 0;
+const FormPanel = styled.div`
+    ${halfStyles}
+    min-width: 0;
+    gap: var(--space-5);
 
-    @media (width <= 768px) {
-        padding: 20px;
-        border-radius: 0 0 10px 10px;
+    & h1 {
+        margin: 0;
+        font-size: var(--font-size-xl);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--line-height-tight);
+        color: var(--color-text);
     }
 `;
 
-const CreateAccountButton = styled.div`
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    cursor: pointer;
+const CreateAccountLink = styled(Link)`
+    align-self: flex-end;
+    padding: var(--space-3) 0;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent);
     text-decoration: underline;
-    align-self: end;
+    text-underline-offset: 2px;
+    transition: color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+        color: var(--color-accent-hover);
+    }
+
+    &:active {
+        color: var(--color-accent-pressed);
+    }
 `;

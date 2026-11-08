@@ -1,8 +1,14 @@
-import styled from "styled-components";
+import { styled } from "styled-components";
 import React from "react";
 import { ApiAuth } from "../../api/api-auth";
 import { PulseLoader } from "react-spinners";
 import { isAxiosError } from "axios";
+import { Button } from "../../components/ui/button";
+import { FieldLabel, TextInput } from "../../components/ui/field";
+import { InlineAlert } from "../../components/ui/inline-alert";
+
+/** Loader dot size inside the Login button (unchanged value). */
+const LOADER_DOT_SIZE = "0.5rem";
 
 export interface LoginFormProps 
 {
@@ -38,55 +44,31 @@ export function LoginForm(props: LoginFormProps)
     }
 
     return (
-        <Wrapper onSubmit={submitHandler}>
-            <Input type="text" name="email" placeholder="user email" autoFocus />
+        <Form onSubmit={submitHandler}>
+            <div>
+                <FieldLabel htmlFor="login-email">Email</FieldLabel>
+                <TextInput id="login-email" type="text" name="email" placeholder="user email"
+                           autoComplete="username" autoFocus />
+            </div>
 
-            <Input type="password" name="password" placeholder="Password" />
+            <div>
+                <FieldLabel htmlFor="login-password">Password</FieldLabel>
+                <TextInput id="login-password" type="password" name="password" placeholder="Password"
+                           autoComplete="current-password" />
+            </div>
 
-            {errorMessage && <ErrorLabel>{errorMessage}</ErrorLabel>}
+            {errorMessage && <InlineAlert>{errorMessage}</InlineAlert>}
 
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" $fullWidth disabled={loading}>
                 {loading || 'Login'}
-                <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
+                <PulseLoader loading={loading} size={LOADER_DOT_SIZE} color="var(--color-on-accent)" />
             </Button>
-            
-        </Wrapper>
+        </Form>
     );
 }
 
-const Wrapper = styled.form`
+const Form = styled.form`
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-`;
-
-const ErrorLabel = styled.label`
-    color: var(--color-danger-2);
-    font-weight: bold;
-`;
-
-const Input = styled.input`
-    border-radius: 5px;
-    border: 1px solid var(--color-fg-5);
-    background-color: var(--color-bg-5);
-    color: var(--color-fg-5);
-    height: 2rem;
-    padding: 0.5rem;
-`;
-
-const Button = styled.button`
-    border-radius: 5px;
-    border: none;
-    background-color: var(--color-bg-2);
-    color: var(--color-fg-2);
-    padding: 0.5rem;
-    font-weight: bold;
-
-    &[disabled] {
-        background-color: var(--color-bg-disabled);
-    }
-`;
-
-const PulseLoaderStyled = styled(PulseLoader)`
-    margin-top: 2px;
+    gap: var(--space-4);
 `;
