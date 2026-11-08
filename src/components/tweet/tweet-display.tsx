@@ -1,14 +1,13 @@
 import { styled } from "styled-components";
 import { TweetDisplayInfo } from "../../api/dto/tweet-dtos";
 import emptyAvatar from '../../assets/empty_avatar.png'
-import { HiOutlineChatBubbleLeft } from "react-icons/hi2";
-import { IoIosHeart, IoMdHeartEmpty } from "react-icons/io";
 import { ApiTweet } from "../../api/api-tweet";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TweetNewForm } from "./tweet-new-form";
 import { ApiAuth } from "../../api/api-auth";
-import { LuArrowDownToLine, LuArrowUpToLine } from "react-icons/lu";
+import { LuArrowDownToLine, LuArrowUpToLine, LuHeart, LuMessageCircle } from "react-icons/lu";
+import { IconButton } from "../ui/icon-button";
 
 export interface TweetDisplayProps 
 {
@@ -37,6 +36,19 @@ function relativeTimeString(dateStr: string)
     else 
         return 'just now';
 }
+
+/** Accessible name of an icon button that also shows a count, e.g. "Like it (3)". */
+function labelWithCount(label: string, count: number): string
+{
+    return `${label} (${count})`;
+}
+
+const LABEL_LIKE = "Like it";
+const LABEL_UNLIKE = "Unlike it";
+const LABEL_REPLY = "Reply";
+const LABEL_SHOW_REPLIES = "Show replies";
+const LABEL_SHOW_REPLIED = "Show replied tweet";
+const LABEL_OPEN_PROFILE = "Open user profile";
 
 export function TweetDisplay(props: TweetDisplayProps) 
 {
@@ -88,76 +100,73 @@ export function TweetDisplay(props: TweetDisplayProps)
         navigate(`/replies/${tweetId}`);
     }
 
+    const likeLabel = liked ? LABEL_UNLIKE : LABEL_LIKE;
+
     return (
         <Wrapper>
-            {tweet.user.pictureUrl ?
-                <Picture src={tweet.user.pictureUrl}/> :
-                <Picture src={emptyAvatar}/>
-            }
+            <Picture
+                src={tweet.user.pictureUrl || emptyAvatar}
+                alt={`${tweet.user.name} avatar`}
+            />
             <Description>
-                <header>
+                <Header>
                     <UserName>
                         {tweet.user.name}
                     </UserName>
-                    <UserTag 
-                        title="Open user profile"
-                        onClick={()=>{ navigate(`/profile/${tweet.user.id}`) }
-                    }>
+                    <UserTag to={`/profile/${tweet.user.id}`} title={LABEL_OPEN_PROFILE}>
                         @{tweet.user.username}
-                    </UserTag> 
-                    • 
-                    <RelativeTime>
+                    </UserTag>
+                    <Meta aria-hidden="true">•</Meta>
+                    <Meta as="time" dateTime={tweet.createdAt}>
                         {relativeTimeString(tweet.createdAt)}
-                    </RelativeTime>
-                </header>
+                    </Meta>
+                </Header>
 
                 <Content>
                     {tweet.content}
                 </Content>
 
-                <footer>
-                    <Icon>
-                        {liked ?
-                            <IoIosHeart 
-                                title="Unlike it"
-                                className="lighted" 
-                                onClick={unlikeHandler}
-                            /> 
-                        :
-                            <IoMdHeartEmpty 
-                                title="Like it"
-                                onClick={likeHandler}
-                            />
-                        }
+                <Actions>
+                    <IconButton
+                        $tone="accent"
+                        $active={liked}
+                        title={likeLabel}
+                        aria-label={labelWithCount(likeLabel, totalLikes)}
+                        onClick={liked ? unlikeHandler : likeHandler}
+                    >
+                        <LuHeart fill={liked ? "currentColor" : "none"} aria-hidden="true"/>
                         <span>{totalLikes}</span>
-                    </Icon>
+                    </IconButton>
 
-                    <Icon>
-                        <HiOutlineChatBubbleLeft 
-                            title="Reply"
-                            onClick={startReply}
-                        />
+                    <IconButton
+                        title={LABEL_REPLY}
+                        aria-label={labelWithCount(LABEL_REPLY, tweet.totalReplies)}
+                        onClick={startReply}
+                    >
+                        <LuMessageCircle aria-hidden="true"/>
                         <span>{tweet.totalReplies}</span>
-                    </Icon>
+                    </IconButton>
 
                     {canNavigateDown && tweet.totalReplies > 0 &&
-                    <Icon>
-                        <LuArrowDownToLine 
-                            title="Show replies"
-                            onClick={() => openReplies(tweet.id)}
-                        />
-                    </Icon>
+                    <IconButton
+                        title={LABEL_SHOW_REPLIES}
+                        aria-label={LABEL_SHOW_REPLIES}
+                        onClick={() => openReplies(tweet.id)}
+                    >
+                        <LuArrowDownToLine aria-hidden="true"/>
+                    </IconButton>
                     }
 
                     {canNavigateUp && tweet.repliedId &&
-                    <Icon>
-                        <LuArrowUpToLine 
-                            title="Show replied tweet"
-                            onClick={() => openReplies(tweet.repliedId!)}
-                        />
-                    </Icon>
+                    <IconButton
+                        title={LABEL_SHOW_REPLIED}
+                        aria-label={LABEL_SHOW_REPLIED}
+                        onClick={() => openReplies(tweet.repliedId!)}
+                    >
+                        <LuArrowUpToLine aria-hidden="true"/>
+                    </IconButton>
                     }
-                </footer>
+                </Actions>
 
                 {replying && 
                     <TweetNewForm 
@@ -171,65 +180,89 @@ export function TweetDisplay(props: TweetDisplayProps)
     );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.article`
     display: flex;
-    flex-direction: row;
-    border-width: 1px 0 0 0;
-    border-style: solid;
-    border-color: color-mix(in srgb, var(--color-3) 30%, transparent);
+    gap: var(--space-3);
     margin: 0;
-    padding: 1rem;
-    gap: 1rem;
-    font-size: 0.8rem;
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    color: var(--color-text);
+    transition: background-color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+        background-color: var(--color-surface-hover);
+    }
 `;
 
 const Picture = styled.img`
-    width: 3rem;
-    height: 3rem;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
     border-radius: 50%;
+    object-fit: cover;
 `;
 
 const Description = styled.div`
     display: flex;
     flex-direction: column;
-
-    & > footer {
-        display: flex;
-        flex-direction: row;
-    }
+    flex: 1;
+    min-width: 0;
 `;
 
-const Content = styled.p`
-    margin: 5px 0;
+const Header = styled.header`
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: var(--space-1);
+    line-height: var(--line-height-tight);
 `;
 
 const UserName = styled.span`
-    font-weight: bolder;
-    margin-right: 1rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    overflow-wrap: anywhere;
+    margin-right: var(--space-1);
 `;
 
-const UserTag = styled.span`
-    color: color-mix(in srgb, var(--color-3) 50%, transparent);
-    margin-right: 0.5rem;
-    cursor: pointer;
+const UserTag = styled(Link)`
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    overflow-wrap: anywhere;
+    transition: color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+        color: var(--color-text-secondary);
+        text-decoration: underline;
+    }
+
+    &:active {
+        color: var(--color-text);
+    }
+
+    @media (width <= 600px) {
+        padding: var(--space-3) var(--space-1);
+        margin: calc(-1 * var(--space-3)) calc(-1 * var(--space-1));
+    }
 `;
 
-const RelativeTime = styled.span`
-    margin-left: 0.5rem;
+const Meta = styled.span`
+    color: var(--color-text-muted);
 `;
 
-const Icon = styled.span`
+const Content = styled.p`
+    margin: var(--space-1) 0 0 0;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    overflow-wrap: anywhere;
+`;
+
+const Actions = styled.footer`
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.3rem;
-    margin-right: 1rem;
-
-    & > svg {
-        font-size: 1.3rem;
-        cursor: pointer;
-    }
-
-    & > .lighted {
-        color: var(--color-2);
-    }
+    gap: var(--space-4);
+    margin: var(--space-1) 0 0 calc(-1 * var(--space-2));
 `;

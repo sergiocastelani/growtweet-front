@@ -15,9 +15,9 @@ export function TweetList(props: TweetListProps)
     if (props.loading)
         return (
             <>
-                <TweetDisplayLoading opacity={0.5}/>
-                <TweetDisplayLoading opacity={0.2}/>
-                <TweetDisplayLoading opacity={0.1}/>
+                <TweetDisplayLoading opacity={1}/>
+                <TweetDisplayLoading opacity={0.6}/>
+                <TweetDisplayLoading opacity={0.3}/>
             </>
         );
 

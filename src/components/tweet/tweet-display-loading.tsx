@@ -1,15 +1,24 @@
 import ContentLoader from "react-content-loader";
 import { styled } from "styled-components";
+import { readThemeColor } from "../ui/theme-color";
 
 export interface TweetDisplayLoadingProps
 {
-    opacity?: number;
+    opacity?: number;   // default 1; opacity of the whole skeleton row (fades successive rows)
+}
+
+const SKELETON_BACKGROUND_TOKEN = "--color-surface-2";
+const SKELETON_SHIMMER_TOKEN = "--color-border";
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+function prefersReducedMotion(): boolean
+{
+    return window.matchMedia(REDUCED_MOTION_QUERY).matches;
 }
 
 export function TweetDisplayLoading(props: TweetDisplayLoadingProps) 
 {
-    const {opacity = 0.3} = props;
-    const brightOpacity = opacity + 0.3;
+    const {opacity = 1} = props;
 
     return (
         <Wrapper>
@@ -18,8 +27,10 @@ export function TweetDisplayLoading(props: TweetDisplayLoadingProps)
                 width={400}
                 height={60}
                 viewBox="0 0 400 60"
-                backgroundColor={`rgba(255, 255, 255, ${opacity})`}
-                foregroundColor={`rgba(255, 255, 255, ${brightOpacity})`}
+                backgroundColor={readThemeColor(SKELETON_BACKGROUND_TOKEN)}
+                foregroundColor={readThemeColor(SKELETON_SHIMMER_TOKEN)}
+                animate={!prefersReducedMotion()}
+                style={{ opacity }}
             >
                 <circle cx="24" cy="24" r="24" />
                 <rect x="65" y="2" rx="5" ry="5" width="170" height="10" />
@@ -34,9 +45,7 @@ export function TweetDisplayLoading(props: TweetDisplayLoadingProps)
 }
 
 const Wrapper = styled.div`
-    border-width: 1px 0 0 0;
-    border-style: solid;
-    border-color: color-mix(in srgb, var(--color-3) 30%, transparent);
     margin: 0;
-    padding: 1rem;
+    padding: var(--space-3) var(--space-4);
+    border-top: 1px solid var(--color-border);
 `;
