@@ -8,7 +8,7 @@
 | S02 | [step-02.md](step-02.md) | done | 1 | 1d20aad | 2 needs-human checks pending (see below) |
 | S03 | [step-03.md](step-03.md) | done | 1 | d723858 | Reviewer verified reduced motion via headless Chrome --force-prefers-reduced-motion |
 | S09 | [step-09.md](step-09.md) | done | 1 | dc8dead | Reviewer verified link pressed state in Chrome |
-| S04 | [step-04.md](step-04.md) | pending | 0 | - | - |
+| S04 | [step-04.md](step-04.md) | in-progress | 0 | - | - |
 | S05 | [step-05.md](step-05.md) | pending | 0 | - | - |
 | S06 | [step-06.md](step-06.md) | pending | 0 | - | - |
 | S07 | [step-07.md](step-07.md) | pending | 0 | - | - |

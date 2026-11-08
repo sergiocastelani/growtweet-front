@@ -1,10 +1,14 @@
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Modal } from "../modal";
 import { styled } from "styled-components";
-import { ApiTweet } from "../../api/api-tweet";
 import { isAxiosError } from "axios";
-import { useState } from "react";
 import { PulseLoader } from "react-spinners";
+import { ApiTweet } from "../../api/api-tweet";
+import { Modal } from "../modal";
+import { useToast } from "../toast-context";
+import { Button } from "../ui/button";
+import { FieldError, FieldLabel, TextArea } from "../ui/field";
+import { InlineAlert } from "../ui/inline-alert";
 
 export interface TweetNewFormProps
 {
@@ -18,18 +22,50 @@ interface TweetFormData
     content: string;
 }
 
+const MAX_TWEET_LENGTH = 250;
+const COUNTER_WARNING_FROM = 230;
+const UNKNOWN_ERROR_MESSAGE = "Unknow error occurred!!";   // verbatim, existing text
+
+type CounterState = "normal" | "warning" | "danger";
+
+const COUNTER_COLOR: Record<CounterState, string> = {
+    normal: "var(--color-text-muted)",
+    warning: "var(--color-warning)",
+    danger: "var(--color-danger)",
+};
+
+function counterStateFor(length: number): CounterState
+{
+    if (length > MAX_TWEET_LENGTH)
+        return "danger";
+    if (length >= COUNTER_WARNING_FROM)
+        return "warning";
+    return "normal";
+}
+
 export function TweetNewForm(props: TweetNewFormProps)
 {
     const [loading, setLoading] = useState(false);
-    const { register, handleSubmit, formState: { errors } } = useForm<TweetFormData>();
+    const [apiError, setApiError] = useState<string | null>(null);
+    const { showToast } = useToast();
+    const { register, handleSubmit, watch, formState: { errors } } = useForm<TweetFormData>();
+
+    const fieldId = useId();
+    const labelId = useId();
+    const counterId = useId();
+    const errorId = useId();
+
+    const contentLength = (watch("content") ?? "").length;
+    const counterState = counterStateFor(contentLength);
 
     const onSubmit = async (formData: TweetFormData) =>
     {
         if (loading)
             return;
 
-        try 
+        try
         {
+            setApiError(null);
             setLoading(true);
 
             if(props.replyId !== undefined)
@@ -39,58 +75,67 @@ export function TweetNewForm(props: TweetNewFormProps)
 
             setLoading(false);
             props.onCreated();
-        } 
+        }
         catch (error: unknown)
         {
             setLoading(false);
             if (isAxiosError(error)) {
-                alert(`Error: ${error.response?.data?.message ?? error.message}`);
+                setApiError(`Error: ${error.response?.data?.message ?? error.message}`);
                 return;
             }
 
-            alert("Unknow error occurred!!");
+            showToast(UNKNOWN_ERROR_MESSAGE, "danger");
             console.error(error);
-            props.onCancel();
         }
     }
 
-    const handleCancel = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+    const requestCancel = () =>
     {
         if (loading)
             return;
 
-        event.preventDefault();
-        setLoading(true);
         props.onCancel();
-        setLoading(false);
     }
-    
+
+    const clearApiError = () =>
+    {
+        setApiError(null);
+    }
+
     return (
-        <Modal>
-            <Form onSubmit={handleSubmit(onSubmit)}>
-                <label htmlFor="content">
+        <Modal onClose={requestCancel} closeDisabled={loading} labelledBy={labelId}>
+            <Form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <PromptLabel id={labelId} htmlFor={fieldId}>
                     {props.replyId ? "Post your reply:" : "Post your new message:"}
-                </label>
-                <textarea autoFocus rows={5} {
-                    ...register("content", 
+                </PromptLabel>
+                <TextArea
+                    id={fieldId}
+                    autoFocus
+                    rows={5}
+                    aria-invalid={errors.content ? "true" : undefined}
+                    aria-describedby={errors.content ? `${counterId} ${errorId}` : counterId}
+                    {...register("content",
                     {
-                        required: "Message can't be empty", 
+                        required: "Message can't be empty",
                         maxLength: {
-                            value: 250, 
+                            value: MAX_TWEET_LENGTH,
                             message: "Message can have a maximum of 250 characters"
-                        }
-                    })} 
+                        },
+                        onChange: clearApiError,
+                    })}
                 />
-                {errors.content && 
-                    <ErrorMessage>{errors.content.message?.toString()}</ErrorMessage>
+                {errors.content &&
+                    <FieldError id={errorId}>{errors.content.message?.toString()}</FieldError>
                 }
-            
+                {apiError && <InlineAlert>{apiError}</InlineAlert>}
+
                 <Footer>
-                    <Cancel className="btn" onClick={handleCancel} disabled={loading}>Cancel</Cancel>
-                    <Submit className="btn" disabled={loading}>
-                        {loading || 'Submit'}
-                        <PulseLoaderStyled loading={loading} size="0.5rem" color="white"/>
-                    </Submit>
+                    <Counter id={counterId} $state={counterState}>{contentLength} / {MAX_TWEET_LENGTH}</Counter>
+                    <Button type="button" $variant="ghost" onClick={requestCancel} disabled={loading}>Cancel</Button>
+                    <Button type="submit" disabled={loading}>
+                        {loading || "Submit"}
+                        <PulseLoader loading={loading} size="0.5rem" color="var(--color-on-accent)" />
+                    </Button>
                 </Footer>
             </Form>
         </Modal>
@@ -100,67 +145,30 @@ export function TweetNewForm(props: TweetNewFormProps)
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    width: 85vw;
-    max-width: 700px;
-    font-size: 1rem;
-
-    & > label {
-        margin-bottom: 0.5rem;
-    }
-
-    .btn {
-        width: 8rem;
-        font-weight: bold;
-        font-size: 1rem;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: none;
-    }
+    gap: var(--space-3);
+    width: 100%;
 `;
 
-const ErrorMessage = styled.p`
-    color: var(--color-danger-1);
-    margin: 5px 0 0 0;
+const PromptLabel = styled(FieldLabel)`
+    margin: 0;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text);
+    line-height: var(--line-height-tight);
 `;
 
 const Footer = styled.footer`
     display: flex;
-    justify-content: end;
-    gap: 1rem;
-    padding: 0.5rem 0 0 0;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    flex-wrap: wrap;
 `;
 
-const Cancel = styled.button`
-    background-color: var(--color-bg-danger-1);
-    color: var(--color-fg-danger-1);
-
-    &:hover {
-        background-color: color-mix(in srgb, var(--color-bg-danger-1) 80%, white);
-    }
-
-    &:active {
-        background-color: color-mix(in srgb, var(--color-bg-danger-1) 85%, black);
-    }
-`;
-
-const Submit = styled.button`
-    background-color: var(--color-bg-2);
-    color: var(--color-fg-2);
-
-    &:not(:disabled):hover {
-        background-color: color-mix(in srgb, var(--color-bg-2) 80%, white);
-    }
-
-    &:not(:disabled):active {
-        background-color: color-mix(in srgb, var(--color-bg-2) 85%, black);
-    }
-
-    &[disabled] {
-        background-color: var(--color-bg-disabled);
-        color: var(--color-fg-disabled);
-    }
-`;
-
-const PulseLoaderStyled = styled(PulseLoader)`
-    margin-top: 2px;
+const Counter = styled.span<{ $state: CounterState }>`
+    margin-right: auto;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    color: ${({ $state }) => COUNTER_COLOR[$state]};
 `;
