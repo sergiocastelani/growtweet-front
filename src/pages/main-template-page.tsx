@@ -32,8 +32,8 @@ const VBox = styled.div`
     overflow: hidden;
     padding: 0;
     margin: 0;
-    background-color: var(--color-bg-2);
-    color: var(--color-fg-2);
+    background-color: var(--color-surface-0);
+    color: var(--color-text);
 `;
 
 const HBox = styled.div`
@@ -42,11 +42,12 @@ const HBox = styled.div`
     align-items: stretch;
     justify-content: center;
     max-height: 100%;
+    min-height: 0;
     padding: 0;
     margin: 0;
 
     @media (width <= 600px) {
-        max-height: calc(100% - 3rem);
+        max-height: calc(100% - (var(--mobile-nav-height) + env(safe-area-inset-bottom)));
     }
 `;
 
@@ -55,7 +56,7 @@ const CentralWidget = styled.div`
     margin: 0;
     width: 50%;
     max-width: 600px;
-    border: 1px solid color-mix(in srgb, var(--color-3) 30%, transparent);
+    border: 1px solid var(--color-border);
     border-width: 0 1px 0 1px;
     overflow-y: auto;
     overflow-x: hidden;

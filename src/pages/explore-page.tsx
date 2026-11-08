@@ -1,10 +1,11 @@
 import { styled } from "styled-components";
+import { PageTitle } from "../components/ui/page-title";
 
 export function ExplorePage()
 {
     return (
         <>
-            <Tittle>Explore <small>(static demo page)</small></Tittle>
+            <PageTitle>Explore <small>(static demo page)</small></PageTitle>
             <Item>
                 <header>Sports - 45 min ago</header>
                 <p>Why Pete Carroll was one of the NFL's 'best ever' coaches</p>
@@ -29,34 +30,30 @@ export function ExplorePage()
     )
 }
 
-const Tittle = styled.header`
-    padding: 1rem;
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-    border-color: color-mix(in srgb, var(--color-3) 30%, transparent);
-    border-style: solid;
-    border-width: 0 0 1px 0;
-
-    small {
-        font-size: 0.7rem;
-        font-weight: normal;
-    }
-`
 const Item = styled.div`
-    margin: 1rem 0 1.5rem 1rem;
+    padding: var(--space-3) var(--space-4);
+    margin: 0;
+    border-bottom: 1px solid var(--color-border);
+    transition: background-color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+        background-color: var(--color-surface-hover);
+    }
 
     & > header {
-        font-size: 0.7rem;
-        margin: 0 0 3px 0;
+        margin: 0 0 var(--space-1) 0;
         padding: 0;
-        color: color-mix(in srgb, var(--color-3) 50%, transparent);
+        font-size: var(--font-size-xs);
+        line-height: var(--line-height-tight);
+        color: var(--color-text-muted);
     }
 
     & > p {
         margin: 0;
         padding: 0;
-        font-size: 0.8rem;
-        font-weight: bold;
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        line-height: var(--line-height-base);
+        color: var(--color-text);
     }
 `;
