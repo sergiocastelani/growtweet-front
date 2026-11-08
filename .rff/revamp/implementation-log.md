@@ -1,11 +1,11 @@
 # Implementation Log
 
-- **Updated:** 2026-11-07
+- **Updated:** 2026-11-08
 
 | Step | File | Status | Rounds | Checkpoint | Notes |
 |------|------|--------|--------|-----------|-------|
 | S01 | [step-01.md](step-01.md) | done | 1 | a3b8ad0 | Notes for later owners: S09 "Show more" link color under color-scheme dark; S11 focus ring invisible on orange login area |
-| S02 | [step-02.md](step-02.md) | pending | 0 | - | - |
+| S02 | [step-02.md](step-02.md) | done | 1 | COMMIT | 2 needs-human checks pending (see below) |
 | S03 | [step-03.md](step-03.md) | pending | 0 | - | - |
 | S09 | [step-09.md](step-09.md) | pending | 0 | - | - |
 | S04 | [step-04.md](step-04.md) | pending | 0 | - | - |
@@ -24,5 +24,10 @@ Status: pending | in-progress | done | skipped | blocked
 Deviations from a step file's implementation suggestions, as reported by its implementer and accepted by its reviewer.
 
 - (S01) none; reviewer verified the Inter woff2 request via CDP, so no needs-human check remained.
+- (S02) Temporary scratch render hosted in ExplorePage (via a temp scratch-ui.tsx) instead of FeedPage, to avoid 401 redirects; restored byte-identical. Dev server started with `npx vite --port 5199`.
 
 ## Checks confirmed by the user
+
+## Checks pending human confirmation
+- (S02) Pressed state: holding the mouse on a primary Button darkens and slightly shrinks it (CSS rules verified present).
+- (S02) DevTools Rendering > prefers-reduced-motion: reduce, hovering a Button changes color instantly (global rule verified loaded).
