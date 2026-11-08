@@ -11,14 +11,14 @@
 | S03 | Toast variants and an app-level toast service | approved | [step-03.md](step-03.md) |
 | S09 | News box as a dark raised card | approved | [step-09.md](step-09.md) |
 | S04 | Themed new-tweet/reply dialog with Esc/backdrop close, counter and inline errors | approved | [step-04.md](step-04.md) |
-| S05 | Desktop NavBar with active route, primary pill and compact user chip | pending | - |
-| S06 | Mobile bottom bar with Lucide icons, active state and safe-area padding | pending | - |
-| S07 | Main layout, central-column titles, Explore page and replies inline error | pending | - |
-| S08 | Tweet row restyle with accessible icon actions and themed skeleton | pending | - |
-| S10 | Profile header restyle with ghost Edit button and themed skeleton | pending | - |
-| S11 | Login page as a themed split panel | pending | - |
-| S12 | New-account page restyle with inline API errors | pending | - |
-| S13 | Edit-profile page restyle with inline errors and "Account updated!" toast | pending | - |
+| S05 | Desktop NavBar with active route, primary pill and compact user chip | approved | [step-05.md](step-05.md) |
+| S06 | Mobile bottom bar with Lucide icons, active state and safe-area padding | approved | [step-06.md](step-06.md) |
+| S07 | Main layout, central-column titles, Explore page and replies inline error | approved | [step-07.md](step-07.md) |
+| S08 | Tweet row restyle with accessible icon actions and themed skeleton | approved | [step-08.md](step-08.md) |
+| S10 | Profile header restyle with ghost Edit button and themed skeleton | approved | [step-10.md](step-10.md) |
+| S11 | Login page as a themed split panel | approved | [step-11.md](step-11.md) |
+| S12 | New-account page restyle with inline API errors | approved | [step-12.md](step-12.md) |
+| S13 | Edit-profile page restyle with inline errors and "Account updated!" toast | approved | [step-13.md](step-13.md) |
 
 Status: pending | draft | approved
 
@@ -52,7 +52,7 @@ Names that cross steps, as the plan assigns them. Details are filled in from eac
 | `useToast()` / `showToast(text, variant?, durationMs?)` | hook (`src/components/toast-context.ts`) | S03 | S04, S13 | Stacked toasts, each auto-dismisses on its own timer (default 3000ms); survives route changes; throws outside the provider |
 | `Modal` (`onClose`, `closeDisabled`, `labelledBy`) | component (`src/components/modal.tsx`) | S04 | S04 | Portaled to `document.body`, z-index below the toast stack; Esc/backdrop close unless `closeDisabled`; body scroll lock; focus in on open, back to opener on close |
 | `TweetNewForm` (`replyId?`, `onCreated`, `onCancel`) | component (existing) | S04 (restyle) | S05, S06, S08 | Props unchanged |
-| `LogoutButton` | component (existing, `src/components/logout-button.tsx`) | S05 (restyle) | S10 | No props |
+| `LogoutButton` | component (existing, `src/components/logout-button.tsx`) | S05 (restyle) | S10 | No props; ghost `Button` with `LuLogOut` icon + "Logout" text; no outer margin (container sets spacing) |
 
 ## 3. Decisions
 Decisions approved during a step's review, each about that step's own work only.
@@ -71,3 +71,27 @@ Decisions approved during a step's review, each about that step's own work only.
 - (S04) No focus trap; focus returns to the opener when the dialog closes.
 - (S04) Dialog max width 600px; dialog is portaled to `document.body` and sits below the toast stack.
 - (S04) The inline API error banner clears as soon as the user edits the text (and when a submit starts).
+- (S05) Home is highlighted only on `/` (`NavLink` with `end`), not on `/home`.
+- (S05) Avatar in the user chip uses alt text "`<name>` avatar".
+- (S05) `LogoutButton` has no outer margin; the user chip offsets it via its own `Description` rule.
+- (S06) Active mobile item: orange color plus icon stroke-width 2.5 (no text labels).
+- (S06) Mobile bar items use 44x44px tap targets; hover tint only on hover-capable devices (the "+" cancels `IconButton`'s hover under `@media (hover: none)` locally).
+- (S06) `index.html` viewport has no `viewport-fit=cover`, so the safe-area padding is in place but iOS reports a 0 inset; left unchanged.
+- (S07) Explore's "(static demo page)" subtitle sits on its own line below the title (shared `PageTitle` style).
+- (S07) Replies page uses a private `loadStatus` (`loading`/`loaded`/`failed`); each `tweetId` change resets tweets to `[]` so the skeleton shows; fetch failure shows a danger `InlineAlert`; an empty successful list shows a muted "No replies yet" message (user decision).
+- (S07) Explore headline uses semibold (600) per the type scale.
+- (S08) Tweet rows and skeleton rows keep `border-top` dividers (now `--color-border`), so the line between the profile header and the first tweet stays.
+- (S08) Like and reply accessible names include the count, e.g. "Like it (3)" / "Reply (2)" (user decision).
+- (S08) Skeleton shapes use `--color-surface-2` and the shimmer uses `--color-border`; the shimmer is off under reduced motion (`animate={false}`) (user decision).
+- (S08) The skeleton `opacity` prop fades the whole SVG; the `tweet-list.tsx` values become 1/0.6/0.3 (user decision).
+- (S10) "Profile" uses the sticky `PageTitle` outside the padded header; avatar is one 96px circle with an orange `box-shadow` ring and alt "`<name>` avatar".
+- (S10) Name and handle drop their 0.5rem left indent to align with the avatar (user decision).
+- (S10) Skeleton uses `--color-surface-2`/`--color-border`, `title="Loading profile"` (not `aria-label`), and no shimmer under reduced motion; the reduced-motion check is a private constant.
+- (S10) Current behavior kept: header not reset when switching profiles; a failed `byId` shows no error UI (user decision).
+- (S11) Welcome half uses an `--color-accent-subtle` tint with an orange "GrowTweet" title (not a solid orange half) (user decision).
+- (S11) Visible "Email"/"Password" `FieldLabel`s are added (placeholders kept); the welcome paragraph is left-aligned instead of justified (user decision).
+- (S11) "Create your new account" is a real `Link` to `/new-account`; the login error shows in a danger `InlineAlert` with the same text.
+- (S12) Panel is `width: 100%` with `max-width: 500px` (replaces 60% / min-width 300px); input ids equal field names so the existing `htmlFor` values link labels.
+- (S12) `apiError` (`Error: <message>`) shows in a danger `InlineAlert` above the Create button and clears only when a valid submit starts; errors without a server message stay `console.error` only (no new copy).
+- (S13) Panel is `width: 100%` with `max-width: 500px`; input ids equal field names so labels link; `showToast("Account updated!", "success")` then `navigate(-1)` immediately.
+- (S13) API errors show `Error: <message>` in a danger `InlineAlert` above Update, cleared when a valid submit starts; errors without a server message (network/backend down/non-axios) show the fallback `Error: could not update account` in the same alert, still logged with `console.error` (user decision).
