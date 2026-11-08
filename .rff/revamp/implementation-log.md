@@ -44,3 +44,8 @@ Deviations from a step file's implementation suggestions, as reported by its imp
 - (S02) DevTools Rendering > prefers-reduced-motion: reduce, hovering a Button changes color instantly (global rule verified loaded). — pass
 - (S06) iPhone safe area: on an iPhone with a home indicator, open the app at mobile width; the bottom bar grows by the safe-area inset and its items stay centered in the top 56px, above the home indicator (note: without viewport-fit=cover iOS reports an inset of 0) — pass
 - (S10) Edit pressed state: on your own profile, hold the mouse down on the Edit button; it darkens (surface-pressed) and shrinks slightly (scale 0.97). Rules verified present on the class. — pass
+
+## Final acceptance (plan.md, RFF §10)
+- **2026-11-08:** pass. Agent-verified against baseline 8c52d36 (a3b8ad0^): lint (0 warnings), build, `alert(` grep, legacy-icon grep, 3-width side-by-side comparison of 8 pages, brand colors / Inter, active nav, keyboard focus, modal close rules, 250-char counter, inline API errors, "Account updated!" toast, and Network parity for 13 flows (77/77 request lines identical; only the 3 removed alert() dialogs differ). No needs-human checks left.
+- Minor notes (not failures): `/home` highlights no nav item (Home matches `/` only, same as baseline); non-network tweet-create error now shows a danger toast and keeps the composer open (baseline alerted and closed it); edit-profile failure with no server message now shows "Error: could not update account" (baseline was silent).
+- Test data: users 25 (rffacc_basedqv9z) and 26 (rffacc_afterds7xc), tweets 246 and 248 with one reply each.
