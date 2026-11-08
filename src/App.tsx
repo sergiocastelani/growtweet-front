@@ -1,9 +1,15 @@
 import './app-style.css'
 import { RouterProvider } from "react-router-dom"
 import { appRouter } from "./app-router";
-import { Toast } from "./components/toast";
+import { ToastProvider } from "./components/toast-provider";
+import { ToastContent } from "./components/toast-context";
 import { useEffect, useRef, useState } from "react";
 import { ApiAuth } from './api/api-auth';
+
+const WARMUP_TOAST: ToastContent = {
+    text: "Servers are warming up. This page will reload automatically when ready.",
+    variant: "info",
+};
 
 function App() {
     const [showWarmupMessage, setShowWarmupMessage] = useState(false);
@@ -32,10 +38,9 @@ function App() {
     }, []);
 
     return (
-        <>
-            {showWarmupMessage && <Toast text="Servers are warming up. This page will reload automatically when ready."/>}
+        <ToastProvider pinnedToast={showWarmupMessage ? WARMUP_TOAST : undefined}>
             <RouterProvider router={appRouter} />
-        </>
+        </ToastProvider>
     )
 }
 
