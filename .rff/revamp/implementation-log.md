@@ -34,6 +34,6 @@ Deviations from a step file's implementation suggestions, as reported by its imp
 ## Checks confirmed by the user
 
 ## Checks pending human confirmation
-- (S02) Pressed state: holding the mouse on a primary Button darkens and slightly shrinks it (CSS rules verified present).
-- (S02) DevTools Rendering > prefers-reduced-motion: reduce, hovering a Button changes color instantly (global rule verified loaded).
-- (S06) iPhone safe area: on an iPhone with a home indicator, open the app at mobile width; the bottom bar grows by the safe-area inset and its items stay centered in the top 56px, above the home indicator (note: without viewport-fit=cover iOS reports an inset of 0) — pending
+- (S02) Pressed state: holding the mouse on a primary Button darkens and slightly shrinks it (CSS rules verified present). — pass
+- (S02) DevTools Rendering > prefers-reduced-motion: reduce, hovering a Button changes color instantly (global rule verified loaded). — pass
+- (S06) iPhone safe area: on an iPhone with a home indicator, open the app at mobile width; the bottom bar grows by the safe-area inset and its items stay centered in the top 56px, above the home indicator (note: without viewport-fit=cover iOS reports an inset of 0) — pass
