@@ -12,8 +12,8 @@
 | S05 | [step-05.md](step-05.md) | done | 1 | 3455812 | Note for S10: profile-header Logout icon sits 8px right of Edit icon (Logout now padded) |
 | S06 | [step-06.md](step-06.md) | done | 1 | dfeaee0 | 1 needs-human check pending. Note for S07: HBox still reserves 3rem (48px) but bar is now 56px; bottom 8px clipped on long pages |
 | S07 | [step-07.md](step-07.md) | done | 1 | d19da39 | Mobile HBox reservation now matches bar height (fixes S06 8px clip note); test replies 243, 244 created by user 12 |
-| S08 | [step-08.md](step-08.md) | in-progress | 0 | - | - |
-| S10 | [step-10.md](step-10.md) | pending | 0 | - | - |
+| S08 | [step-08.md](step-08.md) | done | 1 | 41f89f4 | Reviewer verified @handle pressed state via CDP (no needs-human left); test reply "S08 reply parity" created on 244 |
+| S10 | [step-10.md](step-10.md) | in-progress | 0 | - | - |
 | S11 | [step-11.md](step-11.md) | pending | 0 | - | - |
 | S12 | [step-12.md](step-12.md) | pending | 0 | - | - |
 | S13 | [step-13.md](step-13.md) | pending | 0 | - | - |
@@ -31,6 +31,7 @@ Deviations from a step file's implementation suggestions, as reported by its imp
 - (S05) `UserTag` also gets `line-height: var(--line-height-tight)`, like `UserName`.
 - (S06) Comment on `BAR_ITEM_SIZE` reworded so the `mobile-nav-height` static check has one match; no code difference.
 - (S07) tweetId change resets loadStatus/tweets during render (shownTweetId "adjust state on prop change" pattern) instead of inside useEffect, so stale rows never commit; skeleton comment says "former browser alert" to keep the alert( grep clean.
+- (S08) none.
 
 ## Checks confirmed by the user
 

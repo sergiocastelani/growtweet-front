@@ -22,10 +22,10 @@ export function ProfileUserInfo(props: ProfileUserInfoProps)
     return (
         <Wrapper>
             <PictureRow>
-                {userProfile.pictureUrl ?
-                    <Picture src={userProfile?.pictureUrl}/> :
-                    <Picture src={emptyAvatar}/>
-                }
+                <Picture
+                    src={userProfile.pictureUrl || emptyAvatar}
+                    alt={`${userProfile.name} avatar`}
+                />
                 <ActionsColumn>
                     {loggedUser && loggedUser?.id == userProfile?.id &&
                         <>
@@ -41,40 +41,49 @@ export function ProfileUserInfo(props: ProfileUserInfoProps)
     );
 }
 
+const AVATAR_SIZE = "96px";
+
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-1);
 `;
 
 const PictureRow = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: start;
-    gap: 1rem;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-3);
 `;
 
 const ActionsColumn = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 0.7rem;
+    gap: var(--space-2);
 `;
 
 const Picture = styled.img`
-    width: 6rem;
-    height: 6rem;
+    width: ${AVATAR_SIZE};
+    height: ${AVATAR_SIZE};
+    flex-shrink: 0;
+    object-fit: cover;
     border-radius: 50%;
-    border: 4px solid var(--color-fg-1);
+    background-color: var(--color-surface-2);
+    box-shadow: 0 0 0 2px var(--color-surface-0), 0 0 0 4px var(--color-accent);
 `;
 
 const UserName = styled.span`
-    font-weight: bold;
-    margin-left: 0.5rem;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--color-text);
+    overflow-wrap: anywhere;
 `;
 
 const UserTag = styled.span`
-    margin-left: 0.5rem;
-    font-weight: 100;
-    color: color-mix(in srgb, var(--color-fg-2) 50%, transparent);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
 `;

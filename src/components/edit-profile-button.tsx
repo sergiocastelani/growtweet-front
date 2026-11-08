@@ -1,28 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { styled } from "styled-components";
-import { VscEdit } from "react-icons/vsc";
+import { LuPencil } from "react-icons/lu";
+import { Button } from "./ui/button";
 
-export function EditProfileButton() {
+export function EditProfileButton()
+{
     const navigate = useNavigate();
 
     return (
-        <>
-            <Button 
-                onClick={() => navigate('/edit-profile')}
-            >
-                <VscEdit/>Edit
-            </Button>
-        </>
+        <Button
+            type="button"
+            $variant="ghost"
+            onClick={() => navigate('/edit-profile')}
+        >
+            <LuPencil aria-hidden="true"/>Edit
+        </Button>
     );
 }
-
-const Button = styled.div`
-    margin-top: 0.5rem;
-    cursor: pointer;
-    font-size: smaller;
-
-    & svg {
-        vertical-align: text-top;
-        margin-right: 0.5rem;
-    }
-`

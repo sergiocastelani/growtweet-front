@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { UserDisplayInfo } from "../../api/dto/user-dtos";
 import { ApiUser } from "../../api/api-user";
 import { ProfileUserInfo } from "./profile-user-info";
+import { PageTitle } from "../../components/ui/page-title";
 
 export function ProfilePage()
 {
@@ -34,10 +35,8 @@ export function ProfilePage()
 
     return (
         <>
+            <PageTitle>Profile</PageTitle>
             <Header>
-                <Tittle>
-                    Profile
-                </Tittle>
                 <ProfileUserInfo userProfile={userProfile}/>
             </Header>
             <TweetList tweets={tweets ?? []} loading={tweets === null}/>
@@ -46,16 +45,6 @@ export function ProfilePage()
 }
 
 const Header = styled.header`
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-    padding: 1rem;
     margin: 0;
-    font-size: 1rem;
-    font-weight: bold;
-`
-const Tittle = styled.header`
-    margin: 0 0 1rem 0;
-    font-size: 1.2rem;
-    font-weight: bold;
-`
+    padding: var(--space-4);
+`;
