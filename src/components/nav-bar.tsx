@@ -1,11 +1,17 @@
-import styled from "styled-components";
-import logo from "../assets/logo.svg";
-import { FaHashtag, FaHome, FaRegUser } from "react-icons/fa";
+import { styled } from "styled-components";
 import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { LuHash, LuHouse, LuUser } from "react-icons/lu";
+import logo from "../assets/logo.svg";
 import { TweetNewForm } from "./tweet/tweet-new-form";
 import { LoggedUserInfo } from "./logged-user-info";
 import { UserAuthInfo } from "../api/dto/auth-dtos";
-import { useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
+
+/** Nav rows keep at least the 40px hit area used by every control. */
+const NAV_ITEM_MIN_HEIGHT = "40px";
+/** Same subtle press feedback as the shared buttons. */
+const NAV_ITEM_PRESSED_SCALE = 0.97;
 
 export function NavBar()
 {
@@ -27,21 +33,21 @@ export function NavBar()
 
     return (
         <Wrapper>
-            <Logo src={logo}/>
-            <ItemList>
-                <Item onClick={() => navigate('/')}><FaHome/> Home</Item>
-                <Item onClick={() => navigate('/explore')}><FaHashtag /> Explore</Item>
-                
+            <Logo src={logo} alt="GrowTweet"/>
+            <ItemList aria-label="Main navigation">
+                <Item to="/" end><LuHouse aria-hidden="true"/> Home</Item>
+                <Item to="/explore"><LuHash aria-hidden="true"/> Explore</Item>
+
                 {userInfo &&
-                    <Item onClick={() => navigate(`/profile/${userInfo?.id}`)}><FaRegUser/> My Profile</Item>
+                    <Item to={`/profile/${userInfo.id}`}><LuUser aria-hidden="true"/> My Profile</Item>
                 }
             </ItemList>
 
             {userInfo &&
                 <>
-                    <CreateTweetButton onClick={() => setShowNewTweetForm(true)}>
+                    <Button type="button" $fullWidth onClick={() => setShowNewTweetForm(true)}>
                         + Tweet Now
-                    </CreateTweetButton>
+                    </Button>
                     {showNewTweetForm &&
                         <TweetNewForm 
                             onCreated={() => window.location.reload()}
@@ -52,12 +58,12 @@ export function NavBar()
             }
 
             {(userInfo === null) &&
-                <LoginButton onClick={loginButtonHandler}>
+                <Button type="button" $fullWidth onClick={loginButtonHandler}>
                     Login
-                </LoginButton>
+                </Button>
             }
 
-            <LoggedUserInfoStyled userInfo={userInfo}/>
+            <UserChip userInfo={userInfo}/>
         </Wrapper>
     );
 }
@@ -65,10 +71,11 @@ export function NavBar()
 const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-4);
     width: 13rem;
-    padding: 1rem 1rem 0 10px;
-    border: none;
+    padding: var(--space-4) var(--space-4) var(--space-4) var(--space-3);
+    min-height: 0;
+    overflow-y: auto;
 
     @media (width <= 600px) {
         display: none;
@@ -77,68 +84,52 @@ const Wrapper = styled.div`
 
 const Logo = styled.img`
     width: 80%;
+    margin-left: var(--space-3);
 `;
 
-const ItemList = styled.div`
+const ItemList = styled.nav`
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    margin: 1rem 0;
+    gap: var(--space-1);
+    margin: var(--space-4) 0;
 `;
 
-const Item = styled.div`
-    cursor: pointer;
+const Item = styled(NavLink)`
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: ${NAV_ITEM_MIN_HEIGHT};
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-pill);
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        transform var(--duration-fast) var(--ease-out);
 
     & svg {
-        vertical-align: text-top;
-        margin-right: 0.5rem;
+        flex-shrink: 0;
+        font-size: var(--font-size-lg);
     }
 
     &:hover {
-        color: color-mix(in srgb, var(--color-bg-4) 80%, white);
-    }
-`;
-
-const CreateTweetButton = styled.button`
-    width: 100%;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 1rem;
-    border: none;
-    background-color: var(--color-bg-4);
-    color: var(--color-fg-4);
-
-    &:hover {
-        background-color: color-mix(in srgb, var(--color-bg-4) 80%, white);
+        background-color: var(--color-surface-hover);
     }
 
     &:active {
-        background-color: color-mix(in srgb, var(--color-bg-4) 85%, black);
+        transform: scale(${NAV_ITEM_PRESSED_SCALE});
+    }
+
+    &[aria-current="page"] {
+        color: var(--color-accent);
+        font-weight: var(--font-weight-bold);
     }
 `;
 
-const LoginButton = styled.button`
-    width: 100%;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 0.5rem;
-    border-radius: 1rem;
-    border: none;
-    background-color: var(--color-bg-4);
-    color: var(--color-fg-4);
-
-    &:hover {
-        background-color: color-mix(in srgb, var(--color-bg-4) 80%, white);
-    }
-
-    &:active {
-        background-color: color-mix(in srgb, var(--color-bg-4) 85%, black);
-    }
-`;
-
-const LoggedUserInfoStyled = styled(LoggedUserInfo)`
-    position: fixed;
-    bottom: 1rem;
-    max-width: 13rem;
+const UserChip = styled(LoggedUserInfo)`
+    margin-top: auto;
 `;

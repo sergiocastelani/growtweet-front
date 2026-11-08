@@ -18,7 +18,7 @@ export function LoggedUserInfo( props: LoggedUserInfoProps)
 
     return (
         <Wrapper className={props.className}>
-            <Picture src={userInfo.pictureUrl ?? emptyAvatar}/>
+            <Picture src={userInfo.pictureUrl ?? emptyAvatar} alt={`${userInfo.name} avatar`}/>
             <Description>
                 <UserName>{userInfo.name}</UserName>
                 <UserTag>@{userInfo.username}</UserTag>
@@ -30,30 +30,50 @@ export function LoggedUserInfo( props: LoggedUserInfoProps)
 
 const Wrapper = styled.div`
     display: flex;
-    flex-direction: row;
-    border-width: 0;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
     margin: 0;
-    padding: 0;
-    gap: 0.5rem;
-    font-size: 0.8rem;
+    border: none;
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    min-width: 0;
 `;
 
 const Picture = styled.img`
-    width: 2.7rem;
-    height: 2.7rem;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
     border-radius: 50%;
+    object-fit: cover;
 `;
 
 const Description = styled.div`
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+
+    & > button {
+        margin-left: calc(-1 * var(--space-2));
+    }
 `;
 
 const UserName = styled.span`
-    font-weight: bold;
+    max-width: 100%;
+    font-weight: var(--font-weight-semibold);
+    line-height: var(--line-height-tight);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;
 
 const UserTag = styled.span`
-    font-weight: 100;
-    color: color-mix(in srgb, var(--color-fg-2) 30%, transparent);
+    max-width: 100%;
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 `;

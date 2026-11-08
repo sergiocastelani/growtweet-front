@@ -8,8 +8,8 @@
 | S02 | [step-02.md](step-02.md) | done | 1 | 1d20aad | 2 needs-human checks pending (see below) |
 | S03 | [step-03.md](step-03.md) | done | 1 | d723858 | Reviewer verified reduced motion via headless Chrome --force-prefers-reduced-motion |
 | S09 | [step-09.md](step-09.md) | done | 1 | dc8dead | Reviewer verified link pressed state in Chrome |
-| S04 | [step-04.md](step-04.md) | in-progress | 0 | - | - |
-| S05 | [step-05.md](step-05.md) | pending | 0 | - | - |
+| S04 | [step-04.md](step-04.md) | done | 1 | 8abf2cd | Local DB sequences advanced; test user id 12 created by agents |
+| S05 | [step-05.md](step-05.md) | in-progress | 0 | - | - |
 | S06 | [step-06.md](step-06.md) | pending | 0 | - | - |
 | S07 | [step-07.md](step-07.md) | pending | 0 | - | - |
 | S08 | [step-08.md](step-08.md) | pending | 0 | - | - |
@@ -27,6 +27,7 @@ Deviations from a step file's implementation suggestions, as reported by its imp
 - (S02) Temporary scratch render hosted in ExplorePage (via a temp scratch-ui.tsx) instead of FeedPage, to avoid 401 redirects; restored byte-identical. Dev server started with `npx vite --port 5199`.
 - (S03) Code: none. Test setup only: dev server on a custom port behind a local delay proxy for /auth/ping; temporary test buttons in explore-page.tsx restored byte-identical; 375px tested in an iframe.
 - (S09) Inline `/* */` comments from the step's code skeleton left out; CSS identical.
+- (S04) none (private helper naming only).
 
 ## Checks confirmed by the user
 

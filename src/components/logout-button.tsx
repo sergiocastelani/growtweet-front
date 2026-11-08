@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ApiAuth } from "../api/api-auth";
 import { useNavigate } from "react-router-dom";
 import { styled } from "styled-components";
-import { SlLogout } from "react-icons/sl";
+import { LuLogOut } from "react-icons/lu";
+import { ApiAuth } from "../api/api-auth";
+import { Button } from "./ui/button";
 
 export function LogoutButton() {
     const [loading, setLoading]= useState(false);
@@ -22,29 +23,25 @@ export function LogoutButton() {
     }
 
     return (
-        <>
-            <Logout 
-                onClick={logoutHandler} 
-                className={loading ? "disabled" : ""}
-            >
-                <SlLogout/>Logout
-            </Logout>
-        </>
+        <Logout type="button" onClick={logoutHandler} disabled={loading}>
+            <LuLogOut aria-hidden="true"/> Logout
+        </Logout>
     );
 }
 
-const Logout = styled.div`
-    margin-top: 0.5rem;
-    cursor: pointer;
-    font-size: smaller;
+const Logout = styled(Button).attrs({ $variant: "ghost" as const })`
+    border-color: transparent;
+    padding: 0 var(--space-2);
+    gap: var(--space-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
 
     & svg {
-        vertical-align: text-top;
-        margin-right: 0.5rem;
+        font-size: var(--font-size-sm);
     }
 
-    &.disabled {
-        cursor: default;
-        color: color-mix(in srgb, var(--color-3) 30%, transparent);
+    &:hover:not(:disabled) {
+        color: var(--color-text);
     }
-`
+`;
