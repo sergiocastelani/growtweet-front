@@ -6,8 +6,8 @@
 |------|------|--------|--------|-----------|-------|
 | S01 | [step-01.md](step-01.md) | done | 1 | a3b8ad0 | Notes for later owners: S09 "Show more" link color under color-scheme dark; S11 focus ring invisible on orange login area |
 | S02 | [step-02.md](step-02.md) | done | 1 | 1d20aad | 2 needs-human checks pending (see below) |
-| S03 | [step-03.md](step-03.md) | done | 1 | COMMIT | Reviewer verified reduced motion via headless Chrome --force-prefers-reduced-motion |
-| S09 | [step-09.md](step-09.md) | pending | 0 | - | - |
+| S03 | [step-03.md](step-03.md) | done | 1 | d723858 | Reviewer verified reduced motion via headless Chrome --force-prefers-reduced-motion |
+| S09 | [step-09.md](step-09.md) | done | 1 | COMMIT | Reviewer verified link pressed state in Chrome |
 | S04 | [step-04.md](step-04.md) | pending | 0 | - | - |
 | S05 | [step-05.md](step-05.md) | pending | 0 | - | - |
 | S06 | [step-06.md](step-06.md) | pending | 0 | - | - |
@@ -26,6 +26,7 @@ Deviations from a step file's implementation suggestions, as reported by its imp
 - (S01) none; reviewer verified the Inter woff2 request via CDP, so no needs-human check remained.
 - (S02) Temporary scratch render hosted in ExplorePage (via a temp scratch-ui.tsx) instead of FeedPage, to avoid 401 redirects; restored byte-identical. Dev server started with `npx vite --port 5199`.
 - (S03) Code: none. Test setup only: dev server on a custom port behind a local delay proxy for /auth/ping; temporary test buttons in explore-page.tsx restored byte-identical; 375px tested in an iframe.
+- (S09) Inline `/* */` comments from the step's code skeleton left out; CSS identical.
 
 ## Checks confirmed by the user
 

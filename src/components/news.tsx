@@ -39,36 +39,69 @@ const Wrapper = styled.div`
 const Box = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-    margin: 30px;
-    background-color: color-mix(in srgb, var(--color-bg-3) 90%, white);
-    color: var(--color-fg-3);
-    border-radius: 0.5rem;
+    gap: var(--space-1);
+    padding: var(--space-3);
+    margin: var(--space-6);
     max-width: 300px;
+    background-color: var(--color-surface-1);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-1);
 
     & > header {
-        font-weight: bold;
+        padding: var(--space-1) var(--space-3) var(--space-2);
+        font-size: var(--font-size-md);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--line-height-tight);
     }
 
     & > a {
-        font-size: 0.6rem;
-        margin: 0;
-        padding: 0;
+        align-self: flex-start;
+        margin-top: var(--space-1);
+        padding: var(--space-1) var(--space-3);
+        border-radius: var(--radius-sm);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        color: var(--color-accent);
+        text-decoration: none;
+        transition: color var(--duration-fast) var(--ease-out);
+
+        &:hover {
+            color: var(--color-accent-hover);
+            text-decoration: underline;
+        }
+
+        &:active {
+            color: var(--color-accent-pressed);
+        }
     }
 `;
 
 const Item = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    transition: background-color var(--duration-fast) var(--ease-out);
+
+    &:hover {
+        background-color: var(--color-surface-hover);
+    }
+
     & > header {
-        font-size: 0.6rem;
         margin: 0;
         padding: 0;
+        font-size: var(--font-size-xs);
+        color: var(--color-text-muted);
     }
 
     & > p {
         margin: 0;
         padding: 0;
-        font-size: 0.8rem;
-        font-weight: bold;
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        line-height: var(--line-height-tight);
     }
 `;
