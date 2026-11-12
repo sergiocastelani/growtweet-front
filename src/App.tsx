@@ -5,6 +5,7 @@ import { ToastProvider } from "./components/toast-provider";
 import { ToastContent } from "./components/toast-context";
 import { useEffect, useRef, useState } from "react";
 import { ApiAuth } from './api/api-auth';
+import { trackPageView } from './visit-tracker';
 
 const WARMUP_TOAST: ToastContent = {
     text: "Servers are warming up. This page will reload automatically when ready.",
@@ -35,6 +36,19 @@ function App() {
         setWarmupToastTimeout(setTimeout(() => {
             setShowWarmupMessage(true);
         }, 4000));
+    }, []);
+
+    useEffect(() => {
+        let lastPathname = appRouter.state.location.pathname;
+        trackPageView(lastPathname);
+
+        return appRouter.subscribe((state) => {
+            const { pathname } = state.location;
+            if (pathname === lastPathname)
+                return;
+            lastPathname = pathname;
+            trackPageView(pathname);
+        });
     }, []);
 
     return (

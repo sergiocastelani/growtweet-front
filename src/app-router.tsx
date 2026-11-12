@@ -7,6 +7,7 @@ import { NewAccountPage } from "./pages/new-account/new-account-page";
 import { RepliesPage } from "./pages/replies-page";
 import { MainTemplatePage } from "./pages/main-template-page";
 import { EditAccountPage } from "./pages/edit-account/edit-account-page";
+import { StatsPage } from "./pages/stats-page";
 
 export const appRouter = createBrowserRouter([
     {
@@ -46,6 +47,10 @@ export const appRouter = createBrowserRouter([
     {
         path: "/new-account",
         element: <NewAccountPage />,
+    },
+    {
+        path: "/stats",
+        element: <StatsPage />,
     },
 ]);
 
