@@ -1,4 +1,10 @@
 import { CommonResponse } from "./common-response";
 
-export type DailyVisitDTO = CommonResponse<{ date: string; count: number }>;
-export type VisitTotalDTO = CommonResponse<{ total: number }>;
+export interface DailyVisit
+{
+    date: string;   // UTC calendar day, "YYYY-MM-DD"
+    count: number;
+}
+
+export type DailyVisitDTO = CommonResponse<DailyVisit>;
+export type DailyVisitListDTO = CommonResponse<DailyVisit[]>;

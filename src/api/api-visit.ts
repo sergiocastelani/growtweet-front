@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { ApiConnection } from "./api-connection";
-import { DailyVisitDTO, VisitTotalDTO } from "./dto/visit-dtos";
+import { DailyVisit, DailyVisitDTO, DailyVisitListDTO } from "./dto/visit-dtos";
 
 export class ApiVisit extends ApiConnection
 {
@@ -15,13 +15,13 @@ export class ApiVisit extends ApiConnection
         await (super.post('/visits') as Promise<AxiosResponse<DailyVisitDTO>>);
     }
 
-    /** All-time visit count (GET /visits/total). Rejects on any non-2xx status or a network error. */
-    async total() : Promise<number>
+    /** The last `last` registered days, newest first (GET /visits?last=N). Rejects on any non-2xx status or a network error. */
+    async list(last: number) : Promise<DailyVisit[]>
     {
-        return super.get('/visits/total')
-            .then((response: AxiosResponse<VisitTotalDTO>) =>
+        return super.get('/visits', { params: { last } })
+            .then((response: AxiosResponse<DailyVisitListDTO>) =>
             {
-                return response.data.data.total;
+                return response.data.data;
             });
     }
 }
